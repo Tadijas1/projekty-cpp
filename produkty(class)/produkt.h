@@ -13,4 +13,5 @@ class Produkt
     Produkt();
     void pokaz();
     bool sprawdzanie(string);
+    int skalowanie();
 };

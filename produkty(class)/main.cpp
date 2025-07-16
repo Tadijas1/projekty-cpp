@@ -2,7 +2,6 @@
 #include "produkt.h"
 #include <cstdlib> // czyszczenie ekranu
 #include <vector> // dodawanie obiektów do tablicy
-#include <string> // sprawdza ile liter jest w wyrazie
 
 using namespace std;
 
@@ -24,6 +23,7 @@ void pokazywanie()
     system("clear");
     if(p.empty()==false){
         cout<<"Nazwa | Kategoria | Cena"<<endl;
+        skalowanie();
         for (int i = 0; i < ileClass; i++)
         {
             p[i].pokaz();
@@ -69,6 +69,16 @@ void usuwanie()
     getchar();getchar();
 }
 
+int skalowanie()
+{
+    int max=0;
+    for (int i = 0; i < ileClass; i++)
+    {
+        if(p[i].skalowanie()>max) max=p[i].skalowanie();
+    }
+    return max;
+}
+
 int main()
 {
     while(koniec==false)
@@ -79,6 +89,7 @@ int main()
         cout<<"2. Pokarz produkty"<<endl;
         cout<<"3. Usuń produkt"<<endl;
         cout<<"4. Wyjdź"<<endl;
+        cout<<"5. Testy"<<endl;
         cin>>a;
 
         switch(a)
@@ -95,7 +106,9 @@ int main()
         case 4:
             koniec=true;
         break;
-        
+        case 5:
+            skalowanie();
+        break;
         default:
             cout<<"coś nie działa"<<endl;
         break;

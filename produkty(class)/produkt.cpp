@@ -2,6 +2,7 @@
 #include "produkt.h"
 #include <limits> // sprownza czy do int'a nie trafił string
 #include <cstdlib> // czyszczenie ekranu
+#include <string> // sprawdza ile liter jest w wyrazie
 
 using namespace std;
 
@@ -42,4 +43,9 @@ bool Produkt::sprawdzanie(string j)
 {
     if(j==nazwa) return true;
     else return false;
+}
+
+int Produkt::skalowanie()
+{
+    return nazwa.length();
 }
