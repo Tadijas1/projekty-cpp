@@ -10,8 +10,10 @@ class Produkt
     int cena;
     
     public:
-    Produkt();
-    void pokaz();
+    Produkt(string="nieznany produkt",string="nieznana kategoria",int=0);
+    void wczytaj();
+    void pokaz(int, int);
     bool sprawdzanie(string);
-    int skalowanie();
+    friend int skalowanie_n();
+    friend int skalowanie_k();
 };

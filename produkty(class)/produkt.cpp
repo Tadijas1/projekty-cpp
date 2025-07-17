@@ -6,7 +6,34 @@
 
 using namespace std;
 
-Produkt::Produkt()
+int policzZnakiUTF8(const string& tekst)
+{
+    int ileLiter = 0;
+    for (size_t i = 0; i < tekst.length(); ++i) {
+        // Jeśli bajt nie zaczyna się od "10xxxxxx", to nowy znak
+        if ((tekst[i] & 0b11000000) != 0b10000000) {
+            ++ileLiter;
+        }
+    }
+    return ileLiter;
+}
+
+void ileSpacji(int x)
+{
+    for (int i = 0; i < x; i++)
+    {
+        cout<<" ";
+    }
+}
+
+Produkt::Produkt(string n,string k,int c)
+{
+    nazwa=n;
+    kategoria=k;
+    cena=c;
+}
+
+void Produkt::wczytaj()
 {
     bool czy=false;
     cout<<"Podaj nazwę produktu: ";
@@ -31,21 +58,23 @@ Produkt::Produkt()
     }
 }
 
-void Produkt::pokaz()
+void Produkt::pokaz(int max_n,int max_k)
 {
-    if(nazwa.length()==4){
-        cout<<"Działa"<<endl;
-    }
-    cout<<nazwa<<" | "<<kategoria<<" | "<<cena<<endl;
+    int spacje;
+    spacje=max_n-policzZnakiUTF8(nazwa);
+    cout<<nazwa;
+
+    ileSpacji(spacje);
+    cout<<" | "<<kategoria;
+    
+    spacje=max_k-policzZnakiUTF8(kategoria);
+
+    ileSpacji(spacje);
+    cout<<" | "<<cena<<endl;
 }
 
 bool Produkt::sprawdzanie(string j)
 {
     if(j==nazwa) return true;
     else return false;
-}
-
-int Produkt::skalowanie()
-{
-    return nazwa.length();
 }
