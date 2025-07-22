@@ -48,8 +48,8 @@ void usuwanie()
     while(czy_petla==false)
     {
         if(p.empty()==false){
-            bool czy=false;
             system("clear");
+            bool czy=false;
             cout<<"(Aby wyjść wpisz /)"<<endl;
             cout<<"Jaki produkt chcesz usunąć? ";
             cin>>jaki;
@@ -75,8 +75,10 @@ void usuwanie()
             }
         }
         else{
+            system("clear");
             cout<<"Nie masz jeszcze żadnego produktu!"<<endl;
             czy_petla=true;
+            getchar();
         }
 
         getchar();
@@ -131,17 +133,64 @@ void skalowanie_naglowku()
     
 }
 
+int obliczanie_lini()
+{
+    fstream plik;
+    plik.open("plik.txt", ios::in);
+
+    if(plik.good()==false){
+        cout<<"Nie udało się otworzyć pliku!"<<endl;
+        exit(0);
+    }
+
+    string linia;
+    int ile_lini=0;
+
+    while (getline(plik, linia))
+    {
+        ile_lini++;
+    }
+
+    return ile_lini;
+}
+
+void zapisywanie()
+{
+    std::ofstream plik("plik.txt");
+    plik.close();
+
+    for (int i = 0; i < ileClass; i++)
+    {
+        p[i].zapisz(i, ileClass);
+    }
+}
+
 int main()
 {
-    Produkt p1("banan", "owoc", 10);
-    p.push_back(p1);
-    ileClass++;
-    Produkt p2("śliwka", "owoc", 15);
-    p.push_back(p2);
-    ileClass++;
-    Produkt p3("papryka", "warzywo", 20);
-    p.push_back(p3);
-    ileClass++;
+    // Produkt p1("banan", "owoc", 10);
+    // p.push_back(p1);
+    // ileClass++;
+    // Produkt p2("śliwka", "owoc", 15);
+    // p.push_back(p2);
+    // ileClass++;
+    // Produkt p3("papryka", "warzywo", 20);
+    // p.push_back(p3);
+    // ileClass++;
+
+    system("clear");
+    cout<<"1. Nowy magazyn"<<endl;
+    cout<<"2. Wczytaj magazyn"<<endl;
+    cin>>a;
+
+    if(a==2){
+        for (int i = 1; i <= obliczanie_lini()/3; i++)
+        {
+            p.push_back(Produkt());
+            p.back().plik(i);
+            ileClass++;
+        }
+        
+    }
     
     while(koniec==false)
     {
@@ -166,11 +215,14 @@ int main()
             usuwanie();
         break;
         case 4:
+            zapisywanie();
             koniec=true;
         break;
         case 5:
             system("clear");
-            
+
+            cout<<"Na razie nie ma żadnych testów"<<endl;
+
             getchar();getchar();
         break;
         default:

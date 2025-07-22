@@ -1,0 +1,12 @@
+banan
+owoc
+10
+śliwka
+owoc
+15
+papryka
+warzywo
+20
+kokos
+owoc
+100

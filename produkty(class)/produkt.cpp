@@ -80,17 +80,45 @@ bool Produkt::sprawdzanie(string j)
     else return false;
 }
 
-void Produkt::plik()
+void Produkt::plik(int x)
 {
     fstream plik;
     plik.open("plik.txt", ios::in);
 
-    if(plik.good()==false)
-    {
+    if(plik.good()==false){
         cout<<"Nie udało się otworzyć pliku!"<<endl;
         exit(0);
     }
 
-    
+    int nr_pier_lini=(x-1)*3+1;
+    int aktualny_nr=1;
+    string linia;
+
+    while (getline(plik, linia))
+    {
+        if(aktualny_nr==nr_pier_lini) nazwa=linia;
+        if(aktualny_nr==nr_pier_lini+1) kategoria=linia;
+        if(aktualny_nr==nr_pier_lini+2) cena=stoi(linia);
+        aktualny_nr++;
+    }
+
+    plik.close();
 }
 
+void Produkt::zapisz(int x, int y)
+{
+    fstream plik;
+    plik.open("plik.txt", ios::app);
+
+    if(plik.good()==false){
+        cout<<"Nie udało się otworzyć pliku!"<<endl;
+        exit(0);
+    }
+
+    plik<<nazwa<<endl;
+    plik<<kategoria<<endl;
+    plik<<cena;
+    if(x!=y-1) plik<<endl;
+
+    plik.close();
+}

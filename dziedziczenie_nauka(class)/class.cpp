@@ -27,5 +27,6 @@ Szkielet::Szkielet(string n,int d, int a, int h)
 void Szkielet::wyswietlanie()
 {
     Zombie::wyswietlanie();
+    nazwa="Zamiana";
     cout<<"Dystans ataku: "<<dystans_s<<endl;
 }
