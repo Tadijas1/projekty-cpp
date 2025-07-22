@@ -14,6 +14,7 @@ class Produkt
     void wczytaj();
     void pokaz(int, int);
     bool sprawdzanie(string);
+    void plik();
     friend int skalowanie_n();
     friend int skalowanie_k();
 };

@@ -3,6 +3,7 @@
 #include <limits> // sprownza czy do int'a nie trafił string
 #include <cstdlib> // czyszczenie ekranu
 #include <string> // sprawdza ile liter jest w wyrazie
+#include <fstream> //możliwość odczytywania z pliku tekstowego
 
 using namespace std;
 
@@ -78,3 +79,18 @@ bool Produkt::sprawdzanie(string j)
     if(j==nazwa) return true;
     else return false;
 }
+
+void Produkt::plik()
+{
+    fstream plik;
+    plik.open("plik.txt", ios::in);
+
+    if(plik.good()==false)
+    {
+        cout<<"Nie udało się otworzyć pliku!"<<endl;
+        exit(0);
+    }
+
+    
+}
+

@@ -2,6 +2,7 @@
 #include "produkt.h"
 #include <cstdlib> // czyszczenie ekranu
 #include <vector> // dodawanie obiektów do tablicy
+#include <fstream> //możliwość odczytywania z pliku tekstowego
 
 using namespace std;
 
@@ -169,7 +170,7 @@ int main()
         break;
         case 5:
             system("clear");
-            cout<<"Obecnie nie jest nic testowane! :)"<<endl;
+            
             getchar();getchar();
         break;
         default:
