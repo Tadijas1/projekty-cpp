@@ -36,11 +36,12 @@ Produkt::Produkt(string n,string k,int c)
 
 void Produkt::wczytaj()
 {
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
     bool czy=false;
     cout<<"Podaj nazwę produktu: ";
-    cin>>nazwa;
+    getline(cin, nazwa);
     cout<<"Podaj kategorię produktu: ";
-    cin>>kategoria;
+    getline(cin, kategoria);
     
     while(czy==false){
         cout<<"Podaj cenę produktu: ";
