@@ -28,18 +28,15 @@ void sortowanie_b()
             {
                 if(int(p[j].kategoria[miejscje])<int(p[j-1].kategoria[miejscje]))
                 {
-                    cout<<"zamiana: "<<miejscje<<endl;
                     Produkt bufor; bufor=p[j-1];
                     p[j-1]=p[j];
                     p[j]=bufor;
                     czy=false;
                 }
                 else if((int(p[j].kategoria[miejscje])>int(p[j-1].kategoria[miejscje])) || (miejscje==p[j-1].kategoria.size()-1)){
-                    cout<<"nic: "<<miejscje<<endl;
                     czy=false;
                 }
                 else if(miejscje==p[j].kategoria.size()-1){
-                    cout<<"zamiana: "<<miejscje<<endl;
                     Produkt bufor; bufor=p[j-1];
                     p[j-1]=p[j];
                     p[j]=bufor;
