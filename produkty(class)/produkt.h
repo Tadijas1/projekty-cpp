@@ -7,7 +7,7 @@ class Produkt
     private:
     string nazwa;
     string kategoria;
-    int cena;
+    unsigned long long cena;
     
     public:
     Produkt(string="nieznany produkt",string="nieznana kategoria",int=0);

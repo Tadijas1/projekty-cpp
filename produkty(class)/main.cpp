@@ -223,6 +223,11 @@ void poczatek()
             }
             return;
         }
+
+        if(cin.fail()){
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
     }
 }
 
@@ -281,6 +286,11 @@ int main()
         default:
             cout<<"coś nie działa"<<endl;
         break;
+        }
+
+        if(cin.fail()){
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
         }
     }
     return 0;
