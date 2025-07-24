@@ -41,9 +41,9 @@ void Produkt::wczytaj()
     cin>>nazwa;
     cout<<"Podaj kategorię produktu: ";
     cin>>kategoria;
-    cout<<"Podaj cenę produktu: ";
     
     while(czy==false){
+        cout<<"Podaj cenę produktu: ";
         cin>>cena;
         if((cin.fail()) || (cena<=0)){
             system("clear");
@@ -51,6 +51,7 @@ void Produkt::wczytaj()
             cout<<"Wpisdz ją ponownie!"<<endl;
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout<<endl;
         }
         else{
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
