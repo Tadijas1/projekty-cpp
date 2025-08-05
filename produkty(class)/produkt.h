@@ -18,5 +18,6 @@ class Produkt
     void zapisz(int,int);
     friend int skalowanie_n();
     friend int skalowanie_k();
-    friend void sortowanie_b();
+    friend void sortowanie_b_string(bool);
+    friend void sortowanie_b_int();
 };

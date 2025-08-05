@@ -8,35 +8,65 @@
 using namespace std;
 
 int a;
+int jak_sor=2;
 string jaki;
 vector<Produkt> p;
-bool koniec=false;
+bool koniec=true;
 
 int skalowanie_n();
 int skalowanie_k();
 void skalowanie_naglowku();
 
-void sortowanie_b()
+char normalizacja(char x)
+{
+    char wynik;
+    switch (x)
+    {
+        case 'ą': wynik = 'a'; break;
+        case 'ć': wynik = 'c'; break;
+        case 'ę': wynik = 'e'; break;
+        case 'ł': wynik = 'l'; break;
+        case 'ń': wynik = 'n'; break;
+        case 'ó': wynik = 'o'; break;
+        case 'ś': wynik = 's'; break;
+        case 'ź': wynik = 'z'; break;
+        case 'ż': wynik = 'z'; break;
+        default: wynik=x; break;
+    }
+    return wynik;
+}
+
+void sortowanie_b_string(bool co_sor)
 {
     for (int i = 0; i < p.size(); i++)
     {
         for (int j = p.size()-1; j>=1; j--)
         {
+            string slowo1, slowo2;
+            if(co_sor==false){
+                slowo1=p[j].nazwa;
+                slowo2=p[j-1].nazwa;
+            }
+            if(co_sor==true){
+                slowo1=p[j].kategoria;
+                slowo2=p[j-1].kategoria;
+            }
+
             int miejscje=0;
             bool czy=true;
             while(czy)
             {
-                if(int(p[j].kategoria[miejscje])<int(p[j-1].kategoria[miejscje]))
+                if(int(normalizacja(slowo1[miejscje]))<int(normalizacja(slowo2[miejscje])))
                 {
                     Produkt bufor; bufor=p[j-1];
                     p[j-1]=p[j];
                     p[j]=bufor;
                     czy=false;
                 }
-                else if((int(p[j].kategoria[miejscje])>int(p[j-1].kategoria[miejscje])) || (miejscje==p[j-1].kategoria.size()-1)){
+                else if((int(normalizacja(slowo1[miejscje]))>int(normalizacja(slowo2[miejscje]))) || (miejscje==slowo2.size()-1)){
                     czy=false;
                 }
-                else if(miejscje==p[j].kategoria.size()-1){
+                else if(miejscje==slowo1.size()-1){
                     Produkt bufor; bufor=p[j-1];
                     p[j-1]=p[j];
                     p[j]=bufor;
@@ -50,17 +80,39 @@ void sortowanie_b()
     
 }
 
+void sortowanie_b_int()
+{
+    for (int i = 0; i < p.size(); i++)
+    {
+        for (int j = p.size()-1; j>=1; j--)
+        {
+            if (p[j].cena<p[j-1].cena)
+            {
+                Produkt bufor; bufor=p[j-1];
+                p[j-1]=p[j];
+                p[j]=bufor;
+            }
+            
+        }
+        
+    }
+    
+}
+
 void dodawanie()
 {
     system("clear");
     p.push_back(Produkt());
     p.back().wczytaj();
-    sortowanie_b();
 }
 
 void pokazywanie()
 {
     system("clear");
+    if(jak_sor==1) sortowanie_b_string(false);
+    else if(jak_sor==2) sortowanie_b_string(true);
+    else if(jak_sor==3) sortowanie_b_int();
+
     if(p.empty()==false){
         skalowanie_naglowku();
         for (int i = 0; i < p.size(); i++)
@@ -228,34 +280,68 @@ void poczatek()
     }
 }
 
+void ustawienia()
+{
+    bool czy=true;
+    while(czy)
+    {
+        system("clear");
+        cout<<"___Ustawienia___"<<endl;
+        cout<<"1. Sortowanie na podstawie: ";
+        if(jak_sor==1) cout<<"nazwy"<<endl;
+        if(jak_sor==2) cout<<"kategorii"<<endl;
+        if(jak_sor==3) cout<<"ceny"<<endl;
+        cout<<"2. Powrót do panelu głównego"<<endl;
+        cout<<"-----------------------"<<endl;
+        cout<<"|  3. Zapisz i wyjdź  |"<<endl;
+        cout<<"-----------------------"<<endl;
+        cin>>a;
+
+        switch (a)
+        {
+        case 1:
+            jak_sor++;
+            if(jak_sor==4) jak_sor=1;
+        break;
+        case 2:
+            czy=false;
+        break;
+        case 3:
+            zapisywanie();
+            czy=false;
+            koniec=false;
+        break;
+        }
+    }
+}
+
 int main()
 {
 
-    // Produkt p1("banan", "b", 10);
-    // p.push_back(p1);
-    // Produkt p2("śliwka", "ac", 15);
-    // p.push_back(p2);
-    // Produkt p3("papryka", "ab", 20);
-    // p.push_back(p3);
-    // Produkt p4("kokos", "abb", 20);
-    // p.push_back(p4);
-    // Produkt p5("ziemniak", "a", 20);
-    // p.push_back(p5);
-    // Produkt p6("malina", "aba", 20);
-    // p.push_back(p6);
-    // sortowanie_b();
+    Produkt p1("banan", "b", 10);
+    p.push_back(p1);
+    Produkt p2("śliwka", "ac", 15);
+    p.push_back(p2);
+    Produkt p3("papryka", "ab", 20);
+    p.push_back(p3);
+    Produkt p4("kokos", "abb", 20);
+    p.push_back(p4);
+    Produkt p5("ziemniak", "a", 20);
+    p.push_back(p5);
+    Produkt p6("malina", "aba", 20);
+    p.push_back(p6);
 
     poczatek();
 
-    while(koniec==false)
+    while(koniec)
     {
         system("clear");
         cout<<"___Panel główny___"<<endl;
         cout<<"1. Dodaj produkt"<<endl;
         cout<<"2. Pokarz produkty"<<endl;
         cout<<"3. Usuń produkt"<<endl;
-        cout<<"4. Wyjdź i zapisz"<<endl;
-        cout<<"5. Testy"<<endl;
+        cout<<"4. Ustawienia"<<endl;
+        cout<<"6. Testy"<<endl;
         cin>>a;
 
         switch(a)
@@ -270,13 +356,16 @@ int main()
             usuwanie();
         break;
         case 4:
+            ustawienia();
+        break;
+        case 5:
             zapisywanie();
             koniec=true;
         break;
-        case 5:
+        case 6:
             system("clear");
 
-            cout<<"Na razie nie ma żadnych testów"<<endl;
+            cout<<"Na razie nie ma żadnych testów :)"<<endl;
 
             getchar();getchar();
         break;
