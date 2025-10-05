@@ -12,10 +12,10 @@ char a;
 
 void wykonajStrzal(bool &c, int t, int &w);
 
-void czy_oberwales(bool &c)
+void czy_oberwales(bool &c, int s)
 {
     //czy cię trafiono
-    if(1==rand()%3+1){
+    if(1==rand()%s+1){
         cout<<"Zostales trafiony! Masz o jedno zycie mniej!"<<endl;
         if(zycie-1==0){cout<<"NIE ZYJESZ"<<endl; c=false;}
         zycie--;
@@ -26,21 +26,51 @@ void strzelanina(int &t,int &w)
 {
     system("clear");
     bool czy=true, pierwszyNapis=true, jeszce_raz=true;
+    int szansa_na_dostanie;
+    if(t==7) szansa_na_dostanie=1;
+    else if(t==6) szansa_na_dostanie=2;
+    else if(t==5) szansa_na_dostanie=rand()%5+3;
     while (czy)
     {
         system("clear");
+        //czy nie ma wrogów
+        if(w==0){cout<<"WYGRANA"<<endl; czy=false;}
         //przypomnienie
         if(pierwszyNapis){cout<<"Nacisnij S aby zobaczyc swoje statystyki (moższ to zrobic w kazdej chwili)"<<endl; pierwszyNapis=false;}
         //wybieranie
         cout<<"Trwa walka!"<<endl;
         cout<<"1. Strzelasz"<<endl;
+        cout<<"2. Zmień broń"<<endl;
+        switch (t)
+        {
+        case 7:
+            cout<<"3. Zejdź z konia"<<endl;
+        break;
+        case 6:
+            cout<<"3. Schowaj się"<<endl;
+        break;
+        case 5:
+            cout<<"3. Zmień kryjówkę"<<endl;
+            cout<<"4. Otwórz ekwipunek"<<endl;
+        break;
+        default:
+        break;
+        }
         cin>>a;
 
         switch (a)
         {
         case '1':
             wykonajStrzal(jeszce_raz, t, w);
-            czy_oberwales(czy);
+            czy_oberwales(czy, szansa_na_dostanie);
+        break;
+        case 3:
+            if(t==7){t--; szansa_na_dostanie++;}
+            if(t==6){t--; szansa_na_dostanie=rand()%5+3;}
+            else szansa_na_dostanie=rand()%5+3;
+        break;
+        case 4||(t==5):
+            cout<<"dziala"<<endl;
         break;
         case 's':
             //staty
@@ -57,7 +87,7 @@ void strzelanina(int &t,int &w)
     }
 }
 
-void wykonajStrzal(bool &c,int t,int &w)
+void wykonajStrzal(bool &j,int t,int &w)
 {
     system("clear");
     char strzal;
@@ -90,16 +120,16 @@ void wykonajStrzal(bool &c,int t,int &w)
         //zamiana chara na int'a
         strzal=strzal - '0';
         //czy trafil
-        if(c){
+        if(j){
             //nowa osoba
-            if(strzal==los1){cout<<"Trafiles w glowe!"<<endl;}
-            else if((strzal==los2)||(strzal==los3)){cout<<"Trafiles w cialo! Strzel jeszcze raz aby zabic!"<<endl; c=false;}
+            if(strzal==los1){cout<<"Trafiles w glowe! Zabiłeś jednego przeciwnika!"<<endl;}
+            else if((strzal==los2)||(strzal==los3)){cout<<"Trafiles w cialo! Strzel jeszcze raz aby zabic!"<<endl; j=false;}
             else cout<<"Nie trafiles"<<endl;
             sleep(2);
         }
         else{
             //ta sama osoba
-            if((strzal==los1)||(strzal==los2)||(strzal==los3)){cout<<"Trafiłeś!"<<endl; w=w-1; c=false;}
+            if((strzal==los1)||(strzal==los2)||(strzal==los3)){cout<<"Trafiłeś! Zabiłeś jednego przeciwnika!"<<endl; w-=1; j=true;}
             else cout<<"Nie trafileś!"<<endl;
             sleep(2);
         }
@@ -114,7 +144,7 @@ void akcja(Przedmiot *x)
 
 int main()
 {
-    int wrogowie=3, trudnosc=5;
+    int wrogowie=3, trudnosc=6;
     srand(time(NULL));
 
     strzelanina(trudnosc, wrogowie);
