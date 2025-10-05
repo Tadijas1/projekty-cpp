@@ -29,3 +29,18 @@ class Dynamit :public Przedmiot
     virtual void wykorzystanie();
     
 };
+
+//---------------------------------------------
+
+class Bron
+{
+    string nazwa;
+    string jaka_amunicja;
+    int max_w_magazynku;
+    int ile_w_magazynku;
+
+    public:
+    Bron(string="Broń",string="jakaś napewno",int=0,int=0);
+    void przeladuj();
+    void strzal();
+};

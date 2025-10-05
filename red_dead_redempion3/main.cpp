@@ -10,15 +10,18 @@ using namespace std;
 int zycie=10, sokole_oko=5;
 char a;
 
+void zmiana_broni(int &j);
 void wykonajStrzal(bool &c, int t, int &w);
 
 void czy_oberwales(bool &c, int s)
 {
     //czy cię trafiono
     if(1==rand()%s+1){
+        system("clear");
         cout<<"Zostales trafiony! Masz o jedno zycie mniej!"<<endl;
         if(zycie-1==0){cout<<"NIE ZYJESZ"<<endl; c=false;}
         zycie--;
+        sleep(2);
     }
 }
 
@@ -26,18 +29,17 @@ void strzelanina(int &t,int &w)
 {
     system("clear");
     bool czy=true, pierwszyNapis=true, jeszce_raz=true;
-    int szansa_na_dostanie;
+    int szansa_na_dostanie, jaka_bron;
     if(t==7) szansa_na_dostanie=1;
     else if(t==6) szansa_na_dostanie=2;
-    else if(t==5) szansa_na_dostanie=rand()%5+3;
+    else if(t==5) szansa_na_dostanie=rand()%3+3;;
     while (czy)
     {
         system("clear");
-        //czy nie ma wrogów
-        if(w==0){cout<<"WYGRANA"<<endl; czy=false;}
         //przypomnienie
         if(pierwszyNapis){cout<<"Nacisnij S aby zobaczyc swoje statystyki (moższ to zrobic w kazdej chwili)"<<endl; pierwszyNapis=false;}
         //wybieranie
+        cout<<szansa_na_dostanie<<endl;
         cout<<"Trwa walka!"<<endl;
         cout<<"1. Strzelasz"<<endl;
         cout<<"2. Zmień broń"<<endl;
@@ -64,12 +66,16 @@ void strzelanina(int &t,int &w)
             wykonajStrzal(jeszce_raz, t, w);
             czy_oberwales(czy, szansa_na_dostanie);
         break;
-        case 3:
-            if(t==7){t--; szansa_na_dostanie++;}
-            if(t==6){t--; szansa_na_dostanie=rand()%5+3;}
-            else szansa_na_dostanie=rand()%5+3;
+        case '2':
+            zmiana_broni(jaka_bron);
         break;
-        case 4||(t==5):
+        case '3':
+            if(t==7){t--; szansa_na_dostanie++;}
+            if(t==6){t--; szansa_na_dostanie=rand()%3+3;}
+            else szansa_na_dostanie=rand()%3+3;
+            czy_oberwales(czy, szansa_na_dostanie);
+        break;
+        case '4'||(t==5):
             cout<<"dziala"<<endl;
         break;
         case 's':
@@ -84,7 +90,15 @@ void strzelanina(int &t,int &w)
             cout<<"Coś poszło nie tak"<<endl;
         break;
         }
+        //czy nie ma wrogów
+        if(w==0){cout<<"WYGRANA"<<endl; czy=false;}
     }
+}
+
+void zmiana_broni(int &j)
+{
+    cout<<"dziala"<<endl;
+    sleep(2);
 }
 
 void wykonajStrzal(bool &j,int t,int &w)
@@ -106,7 +120,7 @@ void wykonajStrzal(bool &j,int t,int &w)
     {
         los3 = rand()%t+1;
     } while ((los3==los1) || (los3==los2));
-    
+
     //staty
     if(strzal=='s'){
         system("clear");
