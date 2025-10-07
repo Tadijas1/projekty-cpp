@@ -95,12 +95,6 @@ void strzelanina(int &t,int &w)
     }
 }
 
-void zmiana_broni(int &j)
-{
-    cout<<"dziala"<<endl;
-    sleep(2);
-}
-
 void wykonajStrzal(bool &j,int t,int &w)
 {
     system("clear");
@@ -151,6 +145,12 @@ void wykonajStrzal(bool &j,int t,int &w)
     return;
 }
 
+void zmiana_broni(int &j)
+{
+    cout<<"dziala"<<endl;
+    sleep(2);
+}
+
 void akcja(Przedmiot *x)
 {
     x -> wykorzystanie();
@@ -161,7 +161,7 @@ int main()
     int wrogowie=3, trudnosc=6;
     srand(time(NULL));
 
-    strzelanina(trudnosc, wrogowie);
+    //strzelanina(trudnosc, wrogowie);
 
     // Jedzenie p1("puszka", 10);
     // Dynamit d1("bomba", 2);

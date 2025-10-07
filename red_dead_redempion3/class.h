@@ -34,13 +34,27 @@ class Dynamit :public Przedmiot
 
 class Bron
 {
+    protected:
     string nazwa;
-    string jaka_amunicja;
     int max_w_magazynku;
     int ile_w_magazynku;
-
     public:
-    Bron(string="Broń",string="jakaś napewno",int=0,int=0);
-    void przeladuj();
-    void strzal();
+    virtual void przeladuj();
+    virtual void strzal();
+};
+
+class Pistolet :public Bron
+{
+    public:
+    Pistolet(string="Broń",int=0,int=0);
+    virtual void  przeladuj();
+    virtual void strzal();
+};
+
+class Strzelba :public Bron
+{
+    public:
+    Strzelba(string="Broń",int=0,int=0);
+    virtual void  przeladuj();
+    virtual void strzal();
 };
