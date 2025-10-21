@@ -33,14 +33,14 @@ void Dynamit::wykorzystanie()
 
 //--------------------------------------------------
 
-Pistolet::Pistolet(string n, int ma, int ia)
+Bron::Bron(string n, int ma, int ia)
 {
     nazwa=n;
     max_w_magazynku=ma;
     ile_w_magazynku=ia;
 }
 
-void Pistolet::przeladuj()
+void Bron::przeladuj()
 {
     for (int i = 0; i <= max_w_magazynku; i++)
     {
@@ -51,8 +51,14 @@ void Pistolet::przeladuj()
     ile_w_magazynku=max_w_magazynku;
 }
 
-void Pistolet::strzal()
+void Bron::strzal()
 {
     if(ile_w_magazynku>=1) ile_w_magazynku--;
     else cout<<"Nie masz już amunicji. Przeładuj!"<<endl;
+}
+
+Pistolet::Pistolet(string n, int ma, int ia)
+:Bron(n, ma, ia)
+{
+    
 }

@@ -10,7 +10,7 @@ using namespace std;
 int zycie=10, sokole_oko=5;
 char a;
 
-void zmiana_broni(int &j);
+void zmiana_broni(bool &j);
 void wykonajStrzal(bool &c, int t, int &w);
 
 void czy_oberwales(bool &c, int s)
@@ -29,10 +29,14 @@ void strzelanina(int &t,int &w)
 {
     system("clear");
     bool czy=true, pierwszyNapis=true, jeszce_raz=true;
-    int szansa_na_dostanie, jaka_bron;
+    bool jaka_bron=false; //false-pistolet, true-karabin
+    int szansa_na_dostanie;
+
+    //jaka jest szensa że dostaniesz
     if(t==7) szansa_na_dostanie=1;
     else if(t==6) szansa_na_dostanie=2;
-    else if(t==5) szansa_na_dostanie=rand()%3+3;;
+    else if(t==5) szansa_na_dostanie=rand()%3+3;
+
     while (czy)
     {
         system("clear");
@@ -75,8 +79,11 @@ void strzelanina(int &t,int &w)
             else szansa_na_dostanie=rand()%3+3;
             czy_oberwales(czy, szansa_na_dostanie);
         break;
-        case '4'||(t==5):
-            cout<<"dziala"<<endl;
+        case '4':
+            if(t==5){
+                cout<<"dziala"<<endl;
+                sleep(2);
+            }
         break;
         case 's':
             //staty
@@ -145,10 +152,20 @@ void wykonajStrzal(bool &j,int t,int &w)
     return;
 }
 
-void zmiana_broni(int &j)
+void zmiana_broni(bool &j)
 {
-    cout<<"dziala"<<endl;
-    sleep(2);
+    if(j){
+        string bufor;
+        cout<<"Chcesz zmienić na pistolet?"<<endl;
+        cin>>bufor;
+        if(bufor=="tak") j=false;
+    }
+    else{
+        string bufor;
+        cout<<"Chcesz zmienić na karabin?"<<endl;
+        cin>>bufor;
+        if(bufor=="tak") j=true;
+    }
 }
 
 void akcja(Przedmiot *x)
@@ -158,10 +175,12 @@ void akcja(Przedmiot *x)
 
 int main()
 {
+    Pistolet twoj_p("colt", 6, 6);
+    Strzelba twoja_s("karabin pwotarzalny", 8, 8);
     int wrogowie=3, trudnosc=6;
     srand(time(NULL));
 
-    //strzelanina(trudnosc, wrogowie);
+    strzelanina(trudnosc, wrogowie);
 
     // Jedzenie p1("puszka", 10);
     // Dynamit d1("bomba", 2);

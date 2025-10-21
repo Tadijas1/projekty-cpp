@@ -39,8 +39,9 @@ class Bron
     int max_w_magazynku;
     int ile_w_magazynku;
     public:
-    virtual void przeladuj();
-    virtual void strzal();
+    Bron(string="Broń",int=0,int=0);
+    virtual void przeladuj() = 0;
+    virtual void strzal() = 0;
 };
 
 class Pistolet :public Bron
