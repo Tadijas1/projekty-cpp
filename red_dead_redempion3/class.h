@@ -39,9 +39,8 @@ class Bron
     int max_w_magazynku;
     int ile_w_magazynku;
     public:
-    Bron(string="Broń",int=0,int=0);
     virtual void przeladuj() = 0;
-    virtual void strzal() = 0;
+    virtual bool strzal() = 0;
 };
 
 class Pistolet :public Bron
@@ -49,7 +48,8 @@ class Pistolet :public Bron
     public:
     Pistolet(string="Broń",int=0,int=0);
     virtual void  przeladuj();
-    virtual void strzal();
+    virtual bool strzal();
+    friend void strzelanina(int &t,int &w);
 };
 
 class Strzelba :public Bron
@@ -57,5 +57,6 @@ class Strzelba :public Bron
     public:
     Strzelba(string="Broń",int=0,int=0);
     virtual void  przeladuj();
-    virtual void strzal();
+    virtual bool strzal();
+    friend void strzelanina(int &t,int &w);
 };

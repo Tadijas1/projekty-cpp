@@ -17,7 +17,7 @@ void Jedzenie::wykorzystanie()
     cout<<"Przwraza jedzenia: "<<ile_HP<<endl;
 }
 
-//-------------------------------------------------
+//--------------------------------------------------
 
 Dynamit::Dynamit(string n, int i)
 {
@@ -33,32 +33,54 @@ void Dynamit::wykorzystanie()
 
 //--------------------------------------------------
 
-Bron::Bron(string n, int ma, int ia)
+Pistolet::Pistolet(string n, int ma, int ia)
 {
     nazwa=n;
     max_w_magazynku=ma;
     ile_w_magazynku=ia;
 }
 
-void Bron::przeladuj()
+void Pistolet::przeladuj()
 {
-    for (int i = 0; i <= max_w_magazynku; i++)
+    for (int i = ile_w_magazynku; i <= max_w_magazynku; i++)
     {
         cout<<i<<"/"<<max_w_magazynku<<endl;
-        sleep(0.5);
+        sleep(1);
     }
     
     ile_w_magazynku=max_w_magazynku;
 }
 
-void Bron::strzal()
+bool Pistolet::strzal()
 {
-    if(ile_w_magazynku>=1) ile_w_magazynku--;
-    else cout<<"Nie masz już amunicji. Przeładuj!"<<endl;
+    if(ile_w_magazynku>=1) {ile_w_magazynku--; return true;}
+    else {cout<<"Nie masz już amunicji. Przeładuj!"<<endl; return false;}
 }
 
-Pistolet::Pistolet(string n, int ma, int ia)
-:Bron(n, ma, ia)
+//--------------------------------------------------
+
+Strzelba::Strzelba(string n, int ma, int ia)
 {
-    
+    nazwa=n;
+    max_w_magazynku=ma;
+    ile_w_magazynku=ia;
 }
+
+void Strzelba::przeladuj()
+{
+    for (int i = ile_w_magazynku; i <= max_w_magazynku; i++)
+    {
+        cout<<i<<"/"<<max_w_magazynku<<endl;
+        sleep(1);
+    }
+    
+    ile_w_magazynku=max_w_magazynku;
+}
+
+bool Strzelba::strzal()
+{
+    if(ile_w_magazynku>=1) {ile_w_magazynku--; return true;}
+    else {cout<<"Nie masz już amunicji. Przeładuj!"<<endl; sleep(2); return false;}
+}
+
+//--------------------------------------------------

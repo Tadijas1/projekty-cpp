@@ -7,11 +7,14 @@
 
 using namespace std;
 
+Pistolet twoj_p("colt", 6, 6);
+Strzelba twoja_s("karabin pwotarzalny", 8, 8);
 int zycie=10, sokole_oko=5;
 char a;
 
 void zmiana_broni(bool &j);
 void wykonajStrzal(bool &c, int t, int &w);
+bool strzalC(Bron *x);
 
 void czy_oberwales(bool &c, int s)
 {
@@ -64,6 +67,8 @@ void strzelanina(int &t,int &w)
         }
         cin>>a;
 
+
+
         switch (a)
         {
         case '1':
@@ -91,6 +96,7 @@ void strzelanina(int &t,int &w)
             cout<<"Życie: "<<zycie<<endl;
             cout<<"Sokole oko: "<<sokole_oko<<endl;
             cout<<"Pozostali wrogowie: "<<w<<endl;
+            cout<<"Naboji w twoim magazynku: "<<twoj_p.ile_w_magazynku<<"/"<<twoj_p.max_w_magazynku<<endl;
             sleep(2);
         break;
         default:
@@ -129,24 +135,28 @@ void wykonajStrzal(bool &j,int t,int &w)
         cout<<"Sokole oko: "<<sokole_oko<<endl;
         cout<<"Pozostali wrogowie: "<<w<<endl;
         sleep(2);
+        wykonajStrzal(j, t, w);
     }
     else{
         system("clear");
-        //zamiana chara na int'a
-        strzal=strzal - '0';
-        //czy trafil
-        if(j){
-            //nowa osoba
-            if(strzal==los1){cout<<"Trafiles w glowe! Zabiłeś jednego przeciwnika!"<<endl;}
-            else if((strzal==los2)||(strzal==los3)){cout<<"Trafiles w cialo! Strzel jeszcze raz aby zabic!"<<endl; j=false;}
-            else cout<<"Nie trafiles"<<endl;
-            sleep(2);
-        }
-        else{
-            //ta sama osoba
-            if((strzal==los1)||(strzal==los2)||(strzal==los3)){cout<<"Trafiłeś! Zabiłeś jednego przeciwnika!"<<endl; w-=1; j=true;}
-            else cout<<"Nie trafileś!"<<endl;
-            sleep(2);
+        //czy masz jeszcze naboje
+        if(strzalC(&twoj_p)){
+            //zamiana chara na int'a
+            strzal=strzal - '0';
+            //czy trafil
+            if(j){
+                //nowa osoba
+                if(strzal==los1){cout<<"Trafiles w glowe! Zabiłeś jednego przeciwnika!"<<endl;}
+                else if((strzal==los2)||(strzal==los3)){cout<<"Trafiles w cialo! Strzel jeszcze raz aby zabic!"<<endl; j=false;}
+                else cout<<"Nie trafiles"<<endl;
+                sleep(2);
+            }
+            else{
+                //ta sama osoba
+                if((strzal==los1)||(strzal==los2)||(strzal==los3)){cout<<"Trafiłeś! Zabiłeś jednego przeciwnika!"<<endl; w-=1; j=true;}
+                else cout<<"Nie trafileś!"<<endl;
+                sleep(2);
+            }
         }
     }
     return;
@@ -168,19 +178,28 @@ void zmiana_broni(bool &j)
     }
 }
 
-void akcja(Przedmiot *x)
+void wykorzystanie(Przedmiot *x)
 {
     x -> wykorzystanie();
 }
 
+bool strzalC(Bron *x)
+{
+    return x -> strzal();
+}
+
+void przeladuj(Bron *x)
+{
+    x -> przeladuj();
+}
+
 int main()
 {
-    Pistolet twoj_p("colt", 6, 6);
-    Strzelba twoja_s("karabin pwotarzalny", 8, 8);
     int wrogowie=3, trudnosc=6;
     srand(time(NULL));
 
     strzelanina(trudnosc, wrogowie);
+    
 
     // Jedzenie p1("puszka", 10);
     // Dynamit d1("bomba", 2);
