@@ -41,6 +41,8 @@ class Bron
     public:
     virtual void przeladuj() = 0;
     virtual bool strzal() = 0;
+    friend void statystyki(int w);
+    friend void strzelanina(int &t,int &w);
 };
 
 class Pistolet :public Bron
@@ -49,7 +51,6 @@ class Pistolet :public Bron
     Pistolet(string="Broń",int=0,int=0);
     virtual void  przeladuj();
     virtual bool strzal();
-    friend void strzelanina(int &t,int &w);
 };
 
 class Strzelba :public Bron
@@ -58,5 +59,4 @@ class Strzelba :public Bron
     Strzelba(string="Broń",int=0,int=0);
     virtual void  przeladuj();
     virtual bool strzal();
-    friend void strzelanina(int &t,int &w);
 };

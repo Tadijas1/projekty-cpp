@@ -42,6 +42,7 @@ Pistolet::Pistolet(string n, int ma, int ia)
 
 void Pistolet::przeladuj()
 {
+    system("clear");
     for (int i = ile_w_magazynku; i <= max_w_magazynku; i++)
     {
         cout<<i<<"/"<<max_w_magazynku<<endl;
@@ -54,7 +55,7 @@ void Pistolet::przeladuj()
 bool Pistolet::strzal()
 {
     if(ile_w_magazynku>=1) {ile_w_magazynku--; return true;}
-    else {cout<<"Nie masz już amunicji. Przeładuj!"<<endl; return false;}
+    else return false;
 }
 
 //--------------------------------------------------
@@ -68,6 +69,7 @@ Strzelba::Strzelba(string n, int ma, int ia)
 
 void Strzelba::przeladuj()
 {
+    system("clear");
     for (int i = ile_w_magazynku; i <= max_w_magazynku; i++)
     {
         cout<<i<<"/"<<max_w_magazynku<<endl;
@@ -80,7 +82,7 @@ void Strzelba::przeladuj()
 bool Strzelba::strzal()
 {
     if(ile_w_magazynku>=1) {ile_w_magazynku--; return true;}
-    else {cout<<"Nie masz już amunicji. Przeładuj!"<<endl; sleep(2); return false;}
+    else return false;
 }
 
 //--------------------------------------------------

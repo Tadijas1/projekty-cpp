@@ -16,11 +16,19 @@ void zmiana_broni(bool &j);
 void wykonajStrzal(bool &c, int t, int &w);
 bool strzalC(Bron *x);
 
+void statystyki(int w)
+{
+    system("clear");
+    cout<<"Życie: "<<zycie<<endl;
+    cout<<"Sokole oko: "<<sokole_oko<<endl;
+    cout<<"Pozostali wrogowie: "<<w<<endl;
+    cout<<"Naboji w twoim magazynku: "<<twoj_p.ile_w_magazynku<<"/"<<twoj_p.max_w_magazynku<<endl;
+    sleep(2);
+}
+
 void czy_oberwales(bool &c, int s)
 {
-    //czy cię trafiono
     if(1==rand()%s+1){
-        system("clear");
         cout<<"Zostales trafiony! Masz o jedno zycie mniej!"<<endl;
         if(zycie-1==0){cout<<"NIE ZYJESZ"<<endl; c=false;}
         zycie--;
@@ -54,15 +62,16 @@ void strzelanina(int &t,int &w)
         {
         case 7:
             cout<<"3. Zejdź z konia"<<endl;
+            if(twoj_p.ile_w_magazynku<6) cout<<"4. Przeładuj"<<endl;
         break;
         case 6:
             cout<<"3. Schowaj się"<<endl;
+            if(twoj_p.ile_w_magazynku<6) cout<<"4. Przeładuj"<<endl;
         break;
         case 5:
             cout<<"3. Zmień kryjówkę"<<endl;
-            cout<<"4. Otwórz ekwipunek"<<endl;
-        break;
-        default:
+            if(twoj_p.ile_w_magazynku<6) cout<<"4. Przeładuj"<<endl;
+            cout<<"5. Otwórz ekwipunek"<<endl;
         break;
         }
         cin>>a;
@@ -73,6 +82,8 @@ void strzelanina(int &t,int &w)
         {
         case '1':
             wykonajStrzal(jeszce_raz, t, w);
+            system("clear");
+            //czy cię trafiono
             czy_oberwales(czy, szansa_na_dostanie);
         break;
         case '2':
@@ -82,9 +93,24 @@ void strzelanina(int &t,int &w)
             if(t==7){t--; szansa_na_dostanie++;}
             if(t==6){t--; szansa_na_dostanie=rand()%3+3;}
             else szansa_na_dostanie=rand()%3+3;
+            system("clear");
+            //czy cię trafiono
             czy_oberwales(czy, szansa_na_dostanie);
         break;
         case '4':
+            if(twoj_p.ile_w_magazynku<6){
+                int bufor = 6-twoj_p.ile_w_magazynku;
+                twoj_p.przeladuj();
+                system("clear");
+                for (int i = 0; i < bufor; i++)
+                {
+                    //ile razy cię trafiono
+                    czy_oberwales(czy, szansa_na_dostanie);
+                }
+                
+            }
+        break;
+        case '5':
             if(t==5){
                 cout<<"dziala"<<endl;
                 sleep(2);
@@ -92,12 +118,7 @@ void strzelanina(int &t,int &w)
         break;
         case 's':
             //staty
-            system("clear");
-            cout<<"Życie: "<<zycie<<endl;
-            cout<<"Sokole oko: "<<sokole_oko<<endl;
-            cout<<"Pozostali wrogowie: "<<w<<endl;
-            cout<<"Naboji w twoim magazynku: "<<twoj_p.ile_w_magazynku<<"/"<<twoj_p.max_w_magazynku<<endl;
-            sleep(2);
+            statystyki(w);
         break;
         default:
             cout<<"Coś poszło nie tak"<<endl;
@@ -111,36 +132,33 @@ void strzelanina(int &t,int &w)
 void wykonajStrzal(bool &j,int t,int &w)
 {
     system("clear");
-    char strzal;
-    cout<<"Wybierz liczbe od 1-"<<t<<": ";
-    cin>>strzal;
+    if(strzalC(&twoj_p)){
+        char strzal;
+        cout<<"Wybierz liczbe od 1-"<<t<<": ";
+        cin>>strzal;
 
-    //losowanie
-    int los1 = rand()%t+1;
-    int los2;
-    do
-    {
-        los2 = rand()%t+1;
-    } while (los1==los2);
-    int los3;
-    do
-    {
-        los3 = rand()%t+1;
-    } while ((los3==los1) || (los3==los2));
 
-    //staty
-    if(strzal=='s'){
-        system("clear");
-        cout<<"Życie: "<<zycie<<endl;
-        cout<<"Sokole oko: "<<sokole_oko<<endl;
-        cout<<"Pozostali wrogowie: "<<w<<endl;
-        sleep(2);
-        wykonajStrzal(j, t, w);
-    }
-    else{
-        system("clear");
-        //czy masz jeszcze naboje
-        if(strzalC(&twoj_p)){
+        //losowanie
+        int los1 = rand()%t+1;
+        int los2;
+        do
+        {
+            los2 = rand()%t+1;
+        } while (los1==los2);
+        int los3;
+        do
+        {
+            los3 = rand()%t+1;
+        } while ((los3==los1) || (los3==los2));
+
+
+        //staty
+        if(strzal=='s'){
+            statystyki(w);
+            wykonajStrzal(j, t, w);
+        }
+        else{
+            system("clear");
             //zamiana chara na int'a
             strzal=strzal - '0';
             //czy trafil
@@ -159,11 +177,14 @@ void wykonajStrzal(bool &j,int t,int &w)
             }
         }
     }
+    else{cout<<"Nie masz już amunicji. Przeładuj!"<<endl; sleep(2);}
+
     return;
 }
 
 void zmiana_broni(bool &j)
 {
+    system("clear");
     if(j){
         string bufor;
         cout<<"Chcesz zmienić na pistolet?"<<endl;
