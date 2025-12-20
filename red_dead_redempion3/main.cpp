@@ -91,7 +91,7 @@ void strzelanina(int &t,int &w)
         break;
         case '3':
             if(t==7){t--; szansa_na_dostanie++;}
-            if(t==6){t--; szansa_na_dostanie=rand()%3+3;}
+            else if(t==6){t--; szansa_na_dostanie=rand()%3+3;}
             else szansa_na_dostanie=rand()%3+3;
             system("clear");
             //czy cię trafiono
@@ -216,7 +216,7 @@ void przeladuj(Bron *x)
 
 int main()
 {
-    int wrogowie=3, trudnosc=6;
+    int wrogowie=3, trudnosc=7;
     srand(time(NULL));
 
     strzelanina(trudnosc, wrogowie);
