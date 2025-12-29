@@ -9,7 +9,7 @@ class Drukarka
     string nazwa;
 
     public:
-    Drukarka(int=0,float=0,string="");
+    Drukarka(string="",int=0,float=0);
 };
 
 class Filament
@@ -18,7 +18,7 @@ class Filament
     string nazwa;
 
     public:
-    Filament(int=0,string="");
+    Filament(string="",int=0);
 };
 
 class Transport
@@ -27,5 +27,5 @@ class Transport
     string nazwa;
 
     public:
-    Transport(float=0,string="");
+    Transport(string="",float=0);
 };

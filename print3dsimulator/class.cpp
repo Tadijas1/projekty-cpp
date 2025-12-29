@@ -3,27 +3,27 @@
 
 using namespace std;
 
-Drukarka::Drukarka(int c, float s, string n)
+Drukarka::Drukarka(string n, int c, float s)
 {
+    nazwa=n;
     cena=c;
     szybkosc=s;
-    nazwa=n;
 }
 
 //-----------------------------------------------------
 
-Filament::Filament(int c, string n)
+Filament::Filament(string n, int c)
 {
+    nazwa=n;
     cena_kg=c;
-    nazwa=n;
 }
 
 //-----------------------------------------------------
 
-Transport::Transport(float s, string n)
+Transport::Transport(string n, float s)
 {
-    szybkosc=s;
     nazwa=n;
+    szybkosc=s;
 }
 
 //-----------------------------------------------------
