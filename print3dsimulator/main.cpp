@@ -18,6 +18,39 @@ void drukarnia()
     return;
 }
 
+void podroz(int x)
+{
+    getchar();
+    return;
+}
+
+void podworko()
+{
+    bool exit=true;
+    while(exit)
+    {
+        system("cls"); //system("clear")
+        cout<<"1. Idz do sklepu z drukarkami i filamentem"<<endl;
+        cout<<"2. Idz do sklepu z samochodami"<<endl;
+        cout<<"3. Wroc do domu"<<endl;
+        a=getch(); cout<<endl;
+
+        switch (a)
+        {
+        case '1':
+            podroz(30);
+        break;
+        case '2':
+            podroz(60);
+        break;
+        case '3':
+            exit=false;
+        break;    
+        }
+    }
+    return;
+}
+
 void dom()
 {
     bool exit=true;
@@ -27,7 +60,7 @@ void dom()
         cout<<"1. Idz do drukarni"<<endl;
         cout<<"2. Idz do komputera"<<endl;
         cout<<"3. Wyjdz z domu"<<endl;
-        cout<<"3. Wstecz"<<endl;
+        cout<<"4. Wstecz"<<endl;
         a=getch(); cout<<endl;
 
         switch (a)
@@ -37,6 +70,9 @@ void dom()
         break;
         case '2':
             komputer();
+        break;
+        case '3':
+            podworko();
         break;
         case '4':
             exit=false;
