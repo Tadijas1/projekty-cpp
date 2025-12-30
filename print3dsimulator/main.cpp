@@ -2,10 +2,22 @@
 #include "class.h"
 #include <conio.h>
 #include <windows.h>
+#include <time.h>
 
 using namespace std;
 
 char a;
+float kasa;
+bool zlecienie=true;
+
+Drukarka twojaDrukarka;
+Drukarka ender(600, 1.5);
+Drukarka prusa(1000, 2.5);
+Drukarka prusaPro(1500, 3.5);
+Filament fPla(10, 0);
+Filament fAbs(20, 0);
+Filament fTpu(30, 0);
+Zlecenie zlecenie;
 
 void podroz(int x)
 {
@@ -14,7 +26,7 @@ void podroz(int x)
         system("cls"); //system("clear")
         if(i<=3) cout<<"Szykowanie sie do drogi";
         else if((i>3)&&(i<x)) cout<<"Przemieszczanie sie do celu";
-        else if(i>=x) cout<<"Jestes na miejscu";
+        else if(i==x) cout<<"Jestes na miejscu";
         if(i%3==0) cout<<"."<<endl;
         if(i%3==1) cout<<".."<<endl;
         if(i%3==2) cout<<"..."<<endl;
@@ -32,8 +44,14 @@ void komputer()
     bool exit=true;
     while (exit)
     {
-        getchar();
-        exit=false;
+        if(zlecienie){
+            Zlecenie nowe(rand()%+100+100, rand()%50+50, rand()%30+30, rand()%3);
+        }
+        else{
+            cout<<"Nie masz aktualnie zdanych zlecen :)"<<endl;
+            getchar();
+            exit=false;
+        }
     }
     return;
 }
@@ -137,7 +155,7 @@ void menu_glowne()
     while(exit)
     {
         system("cls"); //system("clear")
-        cout<<"1. Nowa gra"<<endl;
+        cout<<"1. Nowa gra"<<endl;  
         cout<<"2. Wczytaj gre"<<endl;
         cout<<"3. Wyjdz"<<endl;
         a=getch(); cout<<endl;
@@ -162,6 +180,7 @@ void menu_glowne()
 
 int main()
 {
+    srand(time(NULL));
     menu_glowne();
     return 0;
 }

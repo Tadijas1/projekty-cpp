@@ -3,27 +3,43 @@
 
 using namespace std;
 
-Drukarka::Drukarka(string n, int c, float s)
+Drukarka::Drukarka(int c, float s)
 {
-    nazwa=n;
     cena=c;
     szybkosc=s;
 }
 
-//-----------------------------------------------------
-
-Filament::Filament(string n, int c)
+void Drukarka::fun()
 {
-    nazwa=n;
-    cena_kg=c;
+    cout<<nazwa<<endl;
+    cout<<cena<<endl;
+    cout<<szybkosc<<endl;
+    return;
 }
 
 //-----------------------------------------------------
 
-Transport::Transport(string n, float s)
+Filament::Filament(int c, int i)
 {
-    nazwa=n;
+    cena_kg=c;
+    ilosc=i;
+}
+
+//-----------------------------------------------------
+
+Transport::Transport(float s)
+{
     szybkosc=s;
+}
+
+//-----------------------------------------------------
+
+Zlecenie::Zlecenie(float z, int f, int c, int tf)
+{
+    zysk=z;
+    ileFilament=f;
+    ileCzasu=c;
+    typFilamentu=tf;
 }
 
 //-----------------------------------------------------
