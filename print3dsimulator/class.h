@@ -9,8 +9,8 @@ class Drukarka
     float szybkosc;
 
     public:
-    Drukarka(int=0,float=0);
-    void fun();
+    Drukarka(string="",int=0,float=0);
+    friend void kupowanie_drukarki(int a);  
 };
 
 class Filament
@@ -20,6 +20,7 @@ class Filament
 
     public:
     Filament(int=0,int=0);
+    friend void kupowanie_filamentu(int a);
 };
 
 class Transport

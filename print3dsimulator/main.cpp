@@ -3,31 +3,39 @@
 #include <conio.h>
 #include <windows.h>
 #include <time.h>
+#include <string>
 
 using namespace std;
 
 char a;
-float kasa;
-bool czyZlecenie=false;
-bool czyStowrzonaFirma=false;
+float kasa=800;
+bool czyZlecenie=false, czyStowrzonaFirma=false;
+int ktoraDrukarka=0;
 
 Drukarka twojaDrukarka;
-Drukarka ender(600, 1.5);
-Drukarka prusa(1000, 2.5);
-Drukarka prusaPro(1500, 3.5);
-Filament fPla(10, 0);
-Filament fAbs(20, 0);
-Filament fPet(30, 0);
-Zlecenie twojeZlecenie;
+Drukarka ender("ender", 1200, 1);
+Drukarka prusa("prusa", 2500, 1.5);
+Drukarka prusaPro("prusaPro", 4000, 2);
+Filament fPla(80, 0);
+Filament fAbs(90, 0);
+Filament fPet(100, 0);
+Zlecenie twojeZlecenie; 
 
-void podroz(int x)
+void podroz_druk(int x, bool c)
 {
     for (int i = 1; i <= x; i++)
     {
         system("cls"); //system("clear")
-        if(i<=3) cout<<"Szykowanie sie do drogi";
-        else if((i>3)&&(i<x)) cout<<"Przemieszczanie sie do celu";
-        else if(i==x) cout<<"Jestes na miejscu";
+        if(c){
+            if(i<=3) cout<<"Szykowanie sie do drogi";
+            else if((i>3)&&(i<x)) cout<<"Przemieszczanie sie do celu";
+            else if(i==x) cout<<"Jestes na miejscu";
+        }
+        else{
+            if(i<=10) cout<<"Nagrzewanie dyszy";
+            else if((i>3)&&(i<=x-5)) cout<<"Drukowanie";
+            else if(i>=x-5) cout<<"Odklejanie durku";
+        }
         if(i%3==0) cout<<"."<<endl;
         if(i%3==1) cout<<".."<<endl;
         if(i%3==2) cout<<"..."<<endl;
@@ -40,6 +48,111 @@ void podroz(int x)
     return;
 }
 
+void kupowanie_filamentu(int a)
+{
+    string bufor;
+    int x;
+    float b;
+    bool e=true;
+    if(a==1) b=fPla.cena_kg/1000; else if(a==2) b=fAbs.cena_kg/1000; else if(a==3) b=fPet.cena_kg/1000;
+
+    while(e)
+    {
+        system("cls"); //system("clear")
+        cout<<"(w gramach)"<<endl;
+        cout<<"Ile kupujesz: "; cin>>bufor;
+        try{
+            x=stoi(bufor);
+            if((x>0)&&(kasa-x*b>=0)) e=false;
+            else{
+                system("cls"); //system("clear")
+                cout<<"Nie masz tyle pieniedzy"<<endl;
+                getchar();getchar();
+            }
+        }
+        catch(...){
+            e=true;
+        }
+    }
+
+    switch (a)
+    {
+    case 1:
+        kasa-=x*b;
+        fPla.ilosc+=x;
+    break;
+    case 2:
+        kasa-=x*b;
+        fAbs.ilosc+=x;
+    break;
+    case 3:
+        kasa-=x*b;
+        fPet.ilosc+=x;
+    break;
+    }
+    system("cls"); //system("clear")
+    cout<<"Kupiono "<<x<<" gramow filamentu"<<endl;
+    cout<<"Zaplacono: "<<x*b<<endl;
+    cout<<"Masz teraz: "<<kasa<<endl;
+    getchar();getchar();
+    return;
+}
+
+void kupowanie_drukarki(int a)
+{
+    string nazwa, bufor; int cena; float szybkosc;
+    switch (a)
+    {
+    case 1:
+        nazwa=ender.nazwa;
+        cena=ender.cena;
+        szybkosc=ender.szybkosc;
+    break;
+    case 2:
+        nazwa=prusa.nazwa;
+        cena=prusa.cena;
+        szybkosc=prusa.szybkosc;
+    break;
+    case 3:
+        nazwa=prusaPro.nazwa;
+        cena=prusaPro.cena;
+        szybkosc=prusaPro.szybkosc;
+    }
+    bool exit=true;
+    while(exit)
+    {
+        system("cls"); //system("clear")
+        cout<<"Nazwa drukarki: "<<nazwa<<endl;
+        cout<<"Cena: "<<cena<<endl;
+        cout<<"Szybkosc drukarki: "<<szybkosc<<endl;
+        cout<<"Czy chcesz ja kupic?"<<endl;
+        cin>>bufor;
+
+        if((bufor=="tak")||(bufor=="TAK")){
+            if(kasa-cena>=0){
+                system("cls"); //system("clear")
+                kasa-=cena;
+                if(a==1) {twojaDrukarka=ender;} else if(a==2) {twojaDrukarka=prusa;} 
+                else if(a==3) {twojaDrukarka=prusaPro;}
+                cout<<"Kupiono drukarke!"<<endl;
+                cout<<"Stan konta wynosi teraz: "<<kasa<<endl;
+                getchar();getchar();
+                exit=false;
+            }
+            else{
+                system("cls"); //system("clear")
+                cout<<"Nie masz tyle pieniedzy"<<endl;
+                getchar();getchar();
+                exit=false;
+            }
+        }
+        else if((bufor=="nie")||(bufor=="NIE")) exit=false;
+    }
+    return;
+}
+
+//-----------------------------------------------------
+
 void komputer()
 {
     bool exit=true;
@@ -48,7 +161,7 @@ void komputer()
         system("cls"); //system("clear")
         if(czyZlecenie==false){
             cout<<"Masz nowe zlecenie!"<<endl;
-            Zlecenie noweZ(rand()%+100+100, rand()%50+50, rand()%30+30, rand()%3);
+            Zlecenie noweZ(rand()%+100+100, rand()%200+100, rand()%30+30, rand()%3);
             noweZ.pokaz();
             cout<<"1. Przyjmij zlecenie"<<endl;
             cout<<"2. Odrzuc zlecenie"<<endl;
@@ -100,6 +213,8 @@ void tworzenieStrony()
     return;
 }
 
+//-----------------------------------------------------
+
 void drukarnia()
 {
     bool exit=true;
@@ -111,7 +226,102 @@ void drukarnia()
     return;
 }
 
+//-----------------------------------------------------
+
+void s_filament()
+{
+    bool exit=true;
+    while (exit)
+    {
+        system("cls"); //system("clear")
+        string bufor;
+        cout<<"(dostepne typy filamentu: PLA, ABS, PET) wpisz q aby wyjsc"<<endl;
+        cout<<"Jaki filament: "; cin>>bufor;
+        if((bufor=="PLA")||(bufor=="pla")) {kupowanie_filamentu(1); exit=false;}
+        else if((bufor=="ABS")||(bufor=="abs")) {kupowanie_filamentu(2); exit=false;}
+        else if((bufor=="PET")||(bufor=="pet")) {kupowanie_filamentu(3); exit=false;}
+        else if(bufor=="q") exit=false;
+    }
+    return;
+}
+
 void s_drukarki()
+{
+    bool exit=true;
+    while (exit)
+    {
+        system("cls"); //system("clear")
+        cout<<"Jaka drukarke chcesz kupic"<<endl;
+        if(ktoraDrukarka==0)cout<<"1. ender"<<endl;
+        if(ktoraDrukarka<=1)cout<<"2. prusa"<<endl;
+        if(ktoraDrukarka<=2)cout<<"3. prusaPro"<<endl;
+        else cout<<"Masz juz najlepsza drukarke :)"<<endl;
+        cout<<"4. Wracasz do domu"<<endl;
+        a=getch(); cout<<endl;
+
+        switch (a)
+        {
+        case '1':
+            if(ktoraDrukarka==0)
+            {
+                kupowanie_drukarki(1);
+                ktoraDrukarka=1;
+            }
+        break;
+        case '2':
+        if(ktoraDrukarka<=1)
+        {
+            kupowanie_drukarki(2);
+            ktoraDrukarka=2;
+        }
+        break;
+        case '3':
+        if(ktoraDrukarka<=2)
+        {
+            kupowanie_drukarki(3);
+            ktoraDrukarka=3;
+        }
+        break;
+        case '4':
+            exit=false;
+        break;
+        }
+    }
+    return;
+}
+
+void jaki_sklep()
+{
+    bool exit=true;
+    while(exit)
+    {
+        system("cls"); //system("clear")
+        cout<<"Jestes przed sklepem"<<endl;
+        cout<<"1. Wchodzisz do dzialu z drukarkami"<<endl;
+        cout<<"2. Wchodzisz do dzialu z filamentem"<<endl;
+        cout<<"3. Wracasz do domu"<<endl;
+        a=getch(); cout<<endl;
+
+        switch (a)
+        {
+        case '1':
+            s_drukarki();
+        break;
+        case '2':
+            s_filament();
+        break;
+        case '3':
+            podroz_druk(30, true);
+            exit=false;
+        break;
+        }
+    }
+    return;
+}
+
+//--------------------------
+
+void s_pojazdy()
 {
     bool exit=true;
     while (exit)
@@ -122,16 +332,78 @@ void s_drukarki()
     return;
 }
 
-void s_samochody()
+//--------------------------
+
+void totolotek()
 {
     bool exit=true;
     while (exit)
     {
-        getchar();
-        exit=false;
+        int los, liczba;
+        string bufor;
+        bool c=true;
+        los=rand()%100+1;
+        while(c)
+        {
+            system("cls"); //system("clear")
+            cout<<los<<endl;
+            cout<<"Wybierz liczbe z przedzialu 1-100: ";
+            cin>>bufor;
+            try{
+                liczba=stoi(bufor);
+                kasa-=10;
+                c=false;
+            }
+            catch(...){
+                cout<<"Niepoprawnie wpisana liczba"<<endl;
+                getchar();getchar();
+            }
+        }
+        if(los==liczba){
+            system("cls"); //system("clear")
+            cout<<"GRATULACJE WYGRALES!"<<endl;
+            cout<<"Zdobywasz 1000$"<<endl;
+            kasa+=1000;
+            getchar();getchar();
+            exit=false;
+        }
+        else{
+            system("cls"); //system("clear")
+            cout<<"Nieststy nie zgadles :("<<endl;
+            cout<<"Powodzenia nastepnym razem"<<endl;
+            getchar();getchar();
+            exit=false;
+        }
     }
     return;
 }
+
+void kiosk()
+{
+    bool exit=true;
+    while(exit)
+    {   
+        system("cls"); //system("clear")
+        cout<<"1. Graj w totolotka (koszt 10$)"<<endl;
+        cout<<"2. Wracasz do domu"<<endl;
+        a=getch(); cout<<endl;
+
+        switch (a)
+        {
+        case '1':
+            if(kasa-10>0) {totolotek();}
+            else {cout<<"Masz za malo pieniedzy"<<endl; getchar();}
+        break;
+        case '2':
+            podroz_druk(15, true);
+            exit=false;
+        break;
+        }
+    }
+    return;
+}
+
+//--------------------------
 
 void podworko()
 {
@@ -140,27 +412,34 @@ void podworko()
     {
         system("cls"); //system("clear")
         cout<<"1. Idz do sklepu z drukarkami i filamentem"<<endl;
-        cout<<"2. Idz do sklepu z samochodami"<<endl;
-        cout<<"3. Wstecz"<<endl;
+        cout<<"2. Idz do sklepu z pojazdami"<<endl;
+        cout<<"3. Idz do kiosku"<<endl;
+        cout<<"4. Wstecz"<<endl;
         a=getch(); cout<<endl;
 
         switch (a)
         {
         case '1':
-            podroz(10);
-            s_drukarki();
+            podroz_druk(30, true);
+            jaki_sklep();
         break;
         case '2':
-            podroz(60);
-            s_samochody();
+            podroz_druk(60, true);
+            s_pojazdy();
         break;
         case '3':
+            podroz_druk(15, true);
+            kiosk();
+        break;
+        case '4':
             exit=false;
         break;    
         }
     }
     return;
 }
+
+//-----------------------------------------------------
 
 void dom()
 {

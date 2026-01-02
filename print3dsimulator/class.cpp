@@ -5,20 +5,12 @@
 
 using namespace std;
 
-Drukarka::Drukarka(int c, float s)
+Drukarka::Drukarka(string n,int c, float s)
 {
+    nazwa=n;
     cena=c;
     szybkosc=s;
 }
-
-void Drukarka::fun()
-{
-    cout<<nazwa<<endl;
-    cout<<cena<<endl;
-    cout<<szybkosc<<endl;
-    return;
-}
-
 //-----------------------------------------------------
 
 Filament::Filament(int c, int i)
