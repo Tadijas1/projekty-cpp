@@ -42,3 +42,15 @@ class Zlecenie
     Zlecenie(float=0,int=0,int=0,int=0);
     void pokaz();
 };
+
+class Danefirmy
+{
+    string nazwa;
+    string email;
+    string numerTelefonu;
+    string hasloPromocyjne;
+
+    public:
+    Danefirmy(string="",string="",string="",string="");
+    void tworzenie();
+};

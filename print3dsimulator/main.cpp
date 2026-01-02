@@ -8,7 +8,8 @@ using namespace std;
 
 char a;
 float kasa;
-bool zlecienie=true;
+bool czyZlecenie=false;
+bool czyStowrzonaFirma=false;
 
 Drukarka twojaDrukarka;
 Drukarka ender(600, 1.5);
@@ -16,8 +17,8 @@ Drukarka prusa(1000, 2.5);
 Drukarka prusaPro(1500, 3.5);
 Filament fPla(10, 0);
 Filament fAbs(20, 0);
-Filament fTpu(30, 0);
-Zlecenie zlecenie;
+Filament fPet(30, 0);
+Zlecenie twojeZlecenie;
 
 void podroz(int x)
 {
@@ -44,14 +45,57 @@ void komputer()
     bool exit=true;
     while (exit)
     {
-        if(zlecienie){
-            Zlecenie nowe(rand()%+100+100, rand()%50+50, rand()%30+30, rand()%3);
+        system("cls"); //system("clear")
+        if(czyZlecenie==false){
+            cout<<"Masz nowe zlecenie!"<<endl;
+            Zlecenie noweZ(rand()%+100+100, rand()%50+50, rand()%30+30, rand()%3);
+            noweZ.pokaz();
+            cout<<"1. Przyjmij zlecenie"<<endl;
+            cout<<"2. Odrzuc zlecenie"<<endl;
+            a=getch(); cout<<endl;
+
+            switch (a)
+            {
+            case '1':
+                twojeZlecenie=noweZ;
+                czyZlecenie=true;
+                exit=false;
+            break;
+            case '2':
+                cout<<"Zlecenie odrzucone!"<<endl;
+                cout<<"Czekaj na następne"<<endl;
+                exit=false;
+            break;
+            }
         }
         else{
             cout<<"Nie masz aktualnie zdanych zlecen :)"<<endl;
             getchar();
             exit=false;
         }
+    }
+    return;
+}
+
+void tworzenieStrony()
+{
+    bool exit=true;
+    while (exit)
+    {
+        system("cls"); //system("clear")
+        cout<<"Nie masz jeszcze zarejstrowaniej firmy!"<<endl;
+        cout<<"Czy chcesz ja teraz zarejstrowac?"<<endl;
+        cout<<"1. tak"<<endl;
+        cout<<"2. nie"<<endl;
+        a=getch(); cout<<endl;
+
+        if(a=='1'){
+            Danefirmy danefirmy;
+            danefirmy.tworzenie();
+            czyStowrzonaFirma=true;
+            exit=false;
+        }
+        else if(a=='2') exit=false;
     }
     return;
 }
@@ -136,7 +180,8 @@ void dom()
             drukarnia();
         break;
         case '2':
-            komputer();
+            if(czyStowrzonaFirma) komputer();
+            else tworzenieStrony();
         break;
         case '3':
             podworko();
