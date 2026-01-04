@@ -8,9 +8,10 @@
 using namespace std;
 
 char a;
-float kasa=800;
+float kasa=2000;
 bool czyZlecenie=false, czyStowrzonaFirma=false;
 int ktoraDrukarka=0;
+int ktoryTransport=0;
 
 Drukarka twojaDrukarka;
 Drukarka ender("ender", 1200, 1);
@@ -19,7 +20,11 @@ Drukarka prusaPro("prusaPro", 4000, 2);
 Filament fPla(80, 0);
 Filament fAbs(90, 0);
 Filament fPet(100, 0);
-Zlecenie twojeZlecenie; 
+Transport twojTransport;
+Transport rower("rower",2000, 1.5);
+Transport skuter("skuter",3500, 2);
+Transport samochod("samochod",5000, 2.5);
+Zlecenie twojeZlecenie;
 
 void podroz_druk(int x, bool c)
 {
@@ -59,6 +64,7 @@ void kupowanie_filamentu(int a)
     while(e)
     {
         system("cls"); //system("clear")
+        cout<<b<<endl;
         cout<<"(w gramach)"<<endl;
         cout<<"Ile kupujesz: "; cin>>bufor;
         try{
@@ -136,6 +142,57 @@ void kupowanie_drukarki(int a)
                 else if(a==3) {twojaDrukarka=prusaPro;}
                 cout<<"Kupiono drukarke!"<<endl;
                 cout<<"Stan konta wynosi teraz: "<<kasa<<endl;
+                ktoraDrukarka++;
+                getchar();getchar();
+                exit=false;
+            }
+            else{
+                system("cls"); //system("clear")
+                cout<<"Nie masz tyle pieniedzy"<<endl;
+                getchar();getchar();
+                exit=false;
+            }
+        }
+        else if((bufor=="nie")||(bufor=="NIE")) exit=false;
+    }
+    return;
+}
+
+void kupowanie_transportu(int a)
+{
+    string nazwa, bufor; int cena; float szybkosc;
+    switch (a)
+    {
+    case 1:
+        nazwa=rower.nazwa; cena=rower.cena; szybkosc=rower.szybkosc;
+    break;
+    case 2:
+        nazwa=skuter.nazwa; cena=rower.cena; szybkosc=skuter.szybkosc;
+    break;
+    case 3:
+        nazwa=samochod.nazwa; cena=rower.cena; szybkosc=samochod.szybkosc;
+    break;
+    }
+
+    bool exit=true;
+    while (exit)
+    {
+        system("cls"); //system("clear")
+        cout<<"Nazwa pojazdu: "<<nazwa<<endl;
+        cout<<"Cena: "<<cena<<endl;
+        cout<<"Szybkosc: "<<szybkosc<<endl;
+        cout<<"Czy chcesz go kupic?"<<endl;
+        cin>>bufor;
+
+        if((bufor=="tak")||(bufor=="TAK")){
+            if(kasa-cena>=0){
+                system("cls"); //system("clear")
+                kasa-=cena;
+                if(a==1) {twojTransport=rower;} else if(a==2) {twojTransport=skuter;} 
+                else if(a==3) {twojTransport=samochod;}
+                cout<<"Kupiono pojazd!"<<endl;
+                cout<<"Stan konta wynosi teraz: "<<kasa<<endl;
+                ktoryTransport++;
                 getchar();getchar();
                 exit=false;
             }
@@ -251,12 +308,12 @@ void s_drukarki()
     while (exit)
     {
         system("cls"); //system("clear")
-        cout<<"Jaka drukarke chcesz kupic"<<endl;
-        if(ktoraDrukarka==0)cout<<"1. ender"<<endl;
-        if(ktoraDrukarka<=1)cout<<"2. prusa"<<endl;
-        if(ktoraDrukarka<=2)cout<<"3. prusaPro"<<endl;
+        cout<<"Jaka drukarke chcesz kupic?"<<endl;
+        if(ktoraDrukarka==0)cout<<"1. Ender"<<endl;
+        if(ktoraDrukarka<=1)cout<<"2. Prusa"<<endl;
+        if(ktoraDrukarka<=2)cout<<"3. PrusaPro"<<endl;
         else cout<<"Masz juz najlepsza drukarke :)"<<endl;
-        cout<<"4. Wracasz do domu"<<endl;
+        cout<<"4. Wstecz"<<endl;
         a=getch(); cout<<endl;
 
         switch (a)
@@ -265,24 +322,22 @@ void s_drukarki()
             if(ktoraDrukarka==0)
             {
                 kupowanie_drukarki(1);
-                ktoraDrukarka=1;
             }
         break;
         case '2':
         if(ktoraDrukarka<=1)
         {
             kupowanie_drukarki(2);
-            ktoraDrukarka=2;
         }
         break;
         case '3':
         if(ktoraDrukarka<=2)
         {
-            kupowanie_drukarki(3);
-            ktoraDrukarka=3;
+            kupowanie_drukarki(3);  
         }
         break;
         case '4':
+            podroz_druk(60, true);  
             exit=false;
         break;
         }
@@ -326,8 +381,36 @@ void s_pojazdy()
     bool exit=true;
     while (exit)
     {
-        getchar();
-        exit=false;
+        system("cls"); //system("clear")
+        cout<<"Jaki srodek transportu chcesz kupic?"<<endl;
+        if(ktoryTransport==0) cout<<"1. Rower"<<endl;
+        if(ktoryTransport<=1) cout<<"2. Skuter"<<endl;
+        if(ktoryTransport<=2) cout<<"3. Samochod"<<endl;
+        else cout<<"Masz juz najlepszy rodzaj transportu"<<endl;
+        cout<<"4. Wstecz"<<endl;
+        a=getch(); cout<<endl;
+
+        switch (a)
+        {
+        case '1':
+            if(ktoryTransport==0){
+                kupowanie_transportu(1);
+            }
+        break;
+        case '2':
+            if(ktoryTransport<=1){
+                kupowanie_transportu(2);
+            }
+        break;
+        case '3':
+            if(ktoryTransport<=2){
+                kupowanie_transportu(3);
+            }
+        break;
+        case '4':
+            exit=false;
+        break;
+        }
     }
     return;
 }
@@ -424,7 +507,7 @@ void podworko()
             jaki_sklep();
         break;
         case '2':
-            podroz_druk(60, true);
+            podroz_druk(0, true);
             s_pojazdy();
         break;
         case '3':

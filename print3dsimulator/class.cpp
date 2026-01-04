@@ -13,7 +13,7 @@ Drukarka::Drukarka(string n,int c, float s)
 }
 //-----------------------------------------------------
 
-Filament::Filament(int c, int i)
+Filament::Filament(float c, int i)
 {
     cena_kg=c;
     ilosc=i;
@@ -21,8 +21,10 @@ Filament::Filament(int c, int i)
 
 //-----------------------------------------------------
 
-Transport::Transport(float s)
+Transport::Transport(string n, int c, float s)
 {
+    nazwa=n;
+    cena=c;
     szybkosc=s;
 }
 
