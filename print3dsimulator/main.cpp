@@ -9,17 +9,17 @@ using namespace std;
 
 char a;
 float kasa=2000;
-bool czyZlecenie=false, czyStowrzonaFirma=false;
-int ktoraDrukarka=0;
+bool czyZlecenie=false, czyStowrzonaFirma=true; //TESTY
+int ktoraDrukarka=1; //TESTY
 int ktoryTransport=0;
 
-Drukarka twojaDrukarka;
 Drukarka ender("ender", 1200, 1);
 Drukarka prusa("prusa", 2500, 1.5);
 Drukarka prusaPro("prusaPro", 4000, 2);
-Filament fPla(80, 0);
-Filament fAbs(90, 0);
-Filament fPet(100, 0);
+Drukarka twojaDrukarka=prusaPro; //TESTY
+Filament fPla(80, 300); //TESTY
+Filament fAbs(90, 300); //TESTY
+Filament fPet(100, 300); //TESTY
 Transport twojTransport;
 Transport rower("rower",2000, 1.5);
 Transport skuter("skuter",3500, 2);
@@ -28,17 +28,19 @@ Zlecenie twojeZlecenie;
 
 void podroz_druk(int x, bool c)
 {
+    if(c) x/=twojTransport.szybkosc;
     for (int i = 1; i <= x; i++)
     {
         system("cls"); //system("clear")
+        cout<<x<<endl;
         if(c){
             if(i<=3) cout<<"Szykowanie sie do drogi";
             else if((i>3)&&(i<x)) cout<<"Przemieszczanie sie do celu";
             else if(i==x) cout<<"Jestes na miejscu";
         }
         else{
-            if(i<=10) cout<<"Nagrzewanie dyszy";
-            else if((i>3)&&(i<=x-5)) cout<<"Drukowanie";
+            if(i<=5) cout<<"Nagrzewanie dyszy";
+            else if((i>5)&&(i<=x-5)) cout<<"Drukowanie";
             else if(i>=x-5) cout<<"Odklejanie durku";
         }
         if(i%3==0) cout<<"."<<endl;
@@ -64,7 +66,6 @@ void kupowanie_filamentu(int a)
     while(e)
     {
         system("cls"); //system("clear")
-        cout<<b<<endl;
         cout<<"(w gramach)"<<endl;
         cout<<"Ile kupujesz: "; cin>>bufor;
         try{
@@ -272,13 +273,82 @@ void tworzenieStrony()
 
 //-----------------------------------------------------
 
-void drukarnia()
+void magazyn()
 {
     bool exit=true;
-    while (exit)
+    while(exit)
     {
         getchar();
         exit=false;
+    }
+    return;
+}
+
+void drukowanie()
+{
+    // dawanie zmiennych
+    int ileF;
+    if(twojeZlecenie.typFilamentu==0) ileF=fPla.ilosc;
+    else if(twojeZlecenie.typFilamentu==1) ileF=fAbs.ilosc;
+    else if(twojeZlecenie.typFilamentu==2) ileF=fPet.ilosc;
+    string bufor;
+
+    bool exit=true;
+    while (exit)
+    {
+        // wypisywanie danych druku
+        twojeZlecenie.pokaz();
+        cout<<"Posiadany filament tego typu: "<<ileF<<" gramow"<<endl;
+        cout<<"Aktualna drukarka: "<<twojaDrukarka.nazwa<<endl;
+        cout<<"Czy rozpoczac drukowanie?"<<endl; cin>>bufor;
+
+        //warunki
+        if((bufor=="nie")||(bufor=="NIE")) exit=false;
+        else if((bufor=="tak")||(bufor=="TAK")){
+            if(twojeZlecenie.ileFilament>ileF){
+                system("cls"); //system("clear")
+                cout<<"Nie masz wystarczajacej ilosci filamentu"<<endl;
+                getchar();getchar();
+                exit=false;
+            }
+            else{
+                podroz_druk(twojeZlecenie.ileCzasu/=twojaDrukarka.szybkosc, false);
+                system("cls"); //system("clear")
+                cout<<"Wydruk gotowy"<<endl;
+                cout<<"Otrzymane pieniadze: "<<twojeZlecenie.zysk<<endl;
+                cout<<"Zluzyty filament: "<<twojeZlecenie.ileFilament<<endl;
+                getchar();getchar();
+                if(twojeZlecenie.typFilamentu==0) fPla.ilosc-=twojeZlecenie.ileFilament;
+                else if(twojeZlecenie.typFilamentu==1) fAbs.ilosc-=twojeZlecenie.ileFilament;
+                else if(twojeZlecenie.typFilamentu==2) fAbs.ilosc-=twojeZlecenie.ileFilament;
+                kasa+=twojeZlecenie.zysk;
+                czyZlecenie=false;
+                exit=false;
+            }
+        }
+    }
+    return;
+}
+
+void drukarnia()
+{
+    bool exit=true;
+    while(exit)
+    {
+        system("cls"); //system("clear")
+        cout<<"1. Idz do drukarki"<<endl;
+        cout<<"2. Idz do magazynu"<<endl;
+        cout<<"3. Wstecz"<<endl;
+        a=getch(); cout<<endl;
+
+        if(a=='1'){
+            system("cls"); //system("clear")
+            if(czyZlecenie==false) {cout<<"Nie masz aktulalnie zadnych zlecen"<<endl; getchar();}
+            else if(ktoraDrukarka==0){cout<<"Nie masz jeszcze zadnej drukarki"<<endl; getchar();}
+            else drukowanie();
+        }
+        else if(a=='2') magazyn();
+        else if(a=='3') exit=false;
     }
     return;
 }
@@ -387,7 +457,7 @@ void s_pojazdy()
         if(ktoryTransport<=1) cout<<"2. Skuter"<<endl;
         if(ktoryTransport<=2) cout<<"3. Samochod"<<endl;
         else cout<<"Masz juz najlepszy rodzaj transportu"<<endl;
-        cout<<"4. Wstecz"<<endl;
+        cout<<"4. Wroc do domu"<<endl;
         a=getch(); cout<<endl;
 
         switch (a)
@@ -408,6 +478,7 @@ void s_pojazdy()
             }
         break;
         case '4':
+            podroz_druk(60, true);
             exit=false;
         break;
         }
@@ -429,7 +500,6 @@ void totolotek()
         while(c)
         {
             system("cls"); //system("clear")
-            cout<<los<<endl;
             cout<<"Wybierz liczbe z przedzialu 1-100: ";
             cin>>bufor;
             try{
@@ -507,7 +577,7 @@ void podworko()
             jaki_sklep();
         break;
         case '2':
-            podroz_druk(0, true);
+            //podroz_druk(60, true);
             s_pojazdy();
         break;
         case '3':

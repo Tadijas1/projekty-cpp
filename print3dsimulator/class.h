@@ -10,7 +10,8 @@ class Drukarka
 
     public:
     Drukarka(string="",int=0,float=0);
-    friend void kupowanie_drukarki(int a);  
+    friend void kupowanie_drukarki(int a);
+    friend void drukowanie();
 };
 
 class Filament
@@ -21,6 +22,7 @@ class Filament
     public:
     Filament(float=0,int=0);
     friend void kupowanie_filamentu(int a);
+    friend void drukowanie();
 };
 
 class Transport
@@ -30,8 +32,9 @@ class Transport
     float szybkosc;
 
     public:
-    Transport(string="",int=0,float=0);
+    Transport(string="",int=0,float=1);
     friend void kupowanie_transportu(int a);
+    friend void podroz_druk(int x, bool c);
 };
 
 class Zlecenie
@@ -44,6 +47,7 @@ class Zlecenie
     public:
     Zlecenie(float=0,int=0,int=0,int=0);
     void pokaz();
+    friend void drukowanie();
 };
 
 class Danefirmy

@@ -41,12 +41,13 @@ Zlecenie::Zlecenie(float z, int f, int c, int tf)
 void Zlecenie::pokaz()
 {
     cout<<"Zysk: "<<zysk<<endl;
-    cout<<"Potrzebny filament: "<<ileFilament<<endl;
-    cout<<"Potrzebny czas na wydruk: "<<ileCzasu<<endl;
+    cout<<"Potrzebny filament: "<<ileFilament<<" gramy"<<endl;
     cout<<"Typ filamentu: ";
     if(typFilamentu==0) cout<<"PLA"<<endl;
     else if(typFilamentu==1) cout<<"ABS"<<endl;
     else if(typFilamentu==2) cout<<"PET"<<endl;
+    cout<<endl;
+    cout<<"Potrzebny czas na wydruk: "<<ileCzasu<<" sekund"<<endl;
     return;
 }
 
