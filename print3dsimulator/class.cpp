@@ -13,8 +13,9 @@ Drukarka::Drukarka(string n,int c, float s)
 }
 //-----------------------------------------------------
 
-Filament::Filament(float c, int i)
+Filament::Filament(string n, float c, int i)
 {
+    nazwa=n;
     cena_kg=c;
     ilosc=i;
 }

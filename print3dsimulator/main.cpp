@@ -4,6 +4,7 @@
 #include <windows.h>
 #include <time.h>
 #include <string>
+//#include <cmath>
 
 using namespace std;
 
@@ -13,17 +14,11 @@ bool czyZlecenie=false, czyStowrzonaFirma=true; //TESTY
 int ktoraDrukarka=1; //TESTY
 int ktoryTransport=0;
 
-Drukarka ender("ender", 1200, 1);
-Drukarka prusa("prusa", 2500, 1.5);
-Drukarka prusaPro("prusaPro", 4000, 2);
-Drukarka twojaDrukarka=prusaPro; //TESTY
-Filament fPla(80, 300); //TESTY
-Filament fAbs(90, 300); //TESTY
-Filament fPet(100, 300); //TESTY
+Drukarka tabD[3] = {Drukarka("ender", 1200, 1), Drukarka("prusa", 2500, 1.5), Drukarka("prusaPro", 4000, 2)};
+Drukarka twojaDrukarka=tabD[2]; //TESTY
+Filament tabF[3] = {Filament("PLA", 80, 300), Filament("ABS", 90, 300), Filament("PET", 100, 300)}; //TESTY
 Transport twojTransport;
-Transport rower("rower",2000, 1.5);
-Transport skuter("skuter",3500, 2);
-Transport samochod("samochod",5000, 2.5);
+Transport tabT[3] = {Transport("rower",2000, 1.5), Transport("skuter",3500, 2), Transport("samochod",5000, 2.5)};
 Zlecenie twojeZlecenie;
 
 void podroz_druk(int x, bool c)
@@ -61,7 +56,7 @@ void kupowanie_filamentu(int a)
     int x;
     float b;
     bool e=true;
-    if(a==1) b=fPla.cena_kg/1000; else if(a==2) b=fAbs.cena_kg/1000; else if(a==3) b=fPet.cena_kg/1000;
+    if(a==1) b=tabF[0].cena_kg/1000; else if(a==2) b=tabF[1].cena_kg/1000; else if(a==3) b=tabF[2].cena_kg/1000;
 
     while(e)
     {
@@ -86,15 +81,15 @@ void kupowanie_filamentu(int a)
     {
     case 1:
         kasa-=x*b;
-        fPla.ilosc+=x;
+        tabF[0].ilosc+=x;
     break;
     case 2:
         kasa-=x*b;
-        fAbs.ilosc+=x;
+        tabF[1].ilosc+=x;
     break;
     case 3:
         kasa-=x*b;
-        fPet.ilosc+=x;
+        tabF[2].ilosc+=x;
     break;
     }
     system("cls"); //system("clear")
@@ -111,19 +106,19 @@ void kupowanie_drukarki(int a)
     switch (a)
     {
     case 1:
-        nazwa=ender.nazwa;
-        cena=ender.cena;
-        szybkosc=ender.szybkosc;
+        nazwa=tabD[0].nazwa;
+        cena=tabD[0].cena;
+        szybkosc=tabD[0].szybkosc;
     break;
     case 2:
-        nazwa=prusa.nazwa;
-        cena=prusa.cena;
-        szybkosc=prusa.szybkosc;
+        nazwa=tabD[1].nazwa;
+        cena=tabD[1].cena;
+        szybkosc=tabD[1].szybkosc;
     break;
     case 3:
-        nazwa=prusaPro.nazwa;
-        cena=prusaPro.cena;
-        szybkosc=prusaPro.szybkosc;
+        nazwa=tabD[2].nazwa;
+        cena=tabD[2].cena;
+        szybkosc=tabD[2].szybkosc;
     }
     bool exit=true;
     while(exit)
@@ -139,8 +134,8 @@ void kupowanie_drukarki(int a)
             if(kasa-cena>=0){
                 system("cls"); //system("clear")
                 kasa-=cena;
-                if(a==1) {twojaDrukarka=ender;} else if(a==2) {twojaDrukarka=prusa;} 
-                else if(a==3) {twojaDrukarka=prusaPro;}
+                if(a==1) {twojaDrukarka=tabD[0];} else if(a==2) {twojaDrukarka=tabD[1];} 
+                else if(a==3) {twojaDrukarka=tabD[2];}
                 cout<<"Kupiono drukarke!"<<endl;
                 cout<<"Stan konta wynosi teraz: "<<kasa<<endl;
                 ktoraDrukarka++;
@@ -165,13 +160,13 @@ void kupowanie_transportu(int a)
     switch (a)
     {
     case 1:
-        nazwa=rower.nazwa; cena=rower.cena; szybkosc=rower.szybkosc;
+        nazwa=tabT[0].nazwa; cena=tabT[0].cena; szybkosc=tabT[0].szybkosc;
     break;
     case 2:
-        nazwa=skuter.nazwa; cena=rower.cena; szybkosc=skuter.szybkosc;
+        nazwa=tabT[1].nazwa; cena=tabT[1].cena; szybkosc=tabT[1].szybkosc;
     break;
     case 3:
-        nazwa=samochod.nazwa; cena=rower.cena; szybkosc=samochod.szybkosc;
+        nazwa=tabT[2].nazwa; cena=tabT[2].cena; szybkosc=tabT[2].szybkosc;
     break;
     }
 
@@ -189,8 +184,8 @@ void kupowanie_transportu(int a)
             if(kasa-cena>=0){
                 system("cls"); //system("clear")
                 kasa-=cena;
-                if(a==1) {twojTransport=rower;} else if(a==2) {twojTransport=skuter;} 
-                else if(a==3) {twojTransport=samochod;}
+                if(a==1) {twojTransport=tabT[0];} else if(a==2) {twojTransport=tabT[1];} 
+                else if(a==3) {twojTransport=tabT[2];}
                 cout<<"Kupiono pojazd!"<<endl;
                 cout<<"Stan konta wynosi teraz: "<<kasa<<endl;
                 ktoryTransport++;
@@ -278,6 +273,26 @@ void magazyn()
     bool exit=true;
     while(exit)
     {
+        system("cls"); //system("clear")
+        
+        cout<<"Posiadany filament | Posiadane drukarki | Posiadane pojazdy"<<endl; //19, 20, 17
+        
+        for (int i = 0; i < 3; i++)
+        {
+            int ile = to_string(tabF[i].ilosc).size();
+            cout<<tabF[i].nazwa<<": "<<tabF[i].ilosc<<" gramow";
+            for (int i = 0; i < abs(ile+12-19); i++) cout<<" ";
+            cout<<"| ";
+
+            cout<<tabD[i].nazwa;
+            for (int i = 0; i < abs(static_cast<int>(tabD[i].nazwa.size())-20); i++) cout<<" ";
+            cout<<"| ";
+
+            cout<<tabT[i].nazwa;
+            for (int i = 0; i < abs(static_cast<int>(tabT[i].nazwa.size())-17); i++) cout<<" ";
+            cout<<"|";
+            cout<<endl;
+        }
         getchar();
         exit=false;
     }
@@ -288,9 +303,9 @@ void drukowanie()
 {
     // dawanie zmiennych
     int ileF;
-    if(twojeZlecenie.typFilamentu==0) ileF=fPla.ilosc;
-    else if(twojeZlecenie.typFilamentu==1) ileF=fAbs.ilosc;
-    else if(twojeZlecenie.typFilamentu==2) ileF=fPet.ilosc;
+    if(twojeZlecenie.typFilamentu==0) ileF=tabF[0].ilosc;
+    else if(twojeZlecenie.typFilamentu==1) ileF=tabF[1].ilosc;
+    else if(twojeZlecenie.typFilamentu==2) ileF=tabF[2].ilosc;
     string bufor;
 
     bool exit=true;
@@ -318,9 +333,9 @@ void drukowanie()
                 cout<<"Otrzymane pieniadze: "<<twojeZlecenie.zysk<<endl;
                 cout<<"Zluzyty filament: "<<twojeZlecenie.ileFilament<<endl;
                 getchar();getchar();
-                if(twojeZlecenie.typFilamentu==0) fPla.ilosc-=twojeZlecenie.ileFilament;
-                else if(twojeZlecenie.typFilamentu==1) fAbs.ilosc-=twojeZlecenie.ileFilament;
-                else if(twojeZlecenie.typFilamentu==2) fAbs.ilosc-=twojeZlecenie.ileFilament;
+                if(twojeZlecenie.typFilamentu==0) tabF[0].ilosc-=twojeZlecenie.ileFilament;
+                else if(twojeZlecenie.typFilamentu==1) tabF[1].ilosc-=twojeZlecenie.ileFilament;
+                else if(twojeZlecenie.typFilamentu==2) tabF[2].ilosc-=twojeZlecenie.ileFilament;
                 kasa+=twojeZlecenie.zysk;
                 czyZlecenie=false;
                 exit=false;

@@ -12,17 +12,20 @@ class Drukarka
     Drukarka(string="",int=0,float=0);
     friend void kupowanie_drukarki(int a);
     friend void drukowanie();
+    friend void magazyn();
 };
 
 class Filament
 {
+    string nazwa;
     float cena_kg;
     int ilosc;
 
     public:
-    Filament(float=0,int=0);
+    Filament(string="", float=0,int=0);
     friend void kupowanie_filamentu(int a);
     friend void drukowanie();
+    friend void magazyn();
 };
 
 class Transport
@@ -35,6 +38,7 @@ class Transport
     Transport(string="",int=0,float=1);
     friend void kupowanie_transportu(int a);
     friend void podroz_druk(int x, bool c);
+    friend void magazyn();
 };
 
 class Zlecenie
