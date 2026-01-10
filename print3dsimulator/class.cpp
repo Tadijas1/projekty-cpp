@@ -73,7 +73,7 @@ void Danefirmy::tworzenie()
         {
             system("cls"); //system("clear")
             cout<<"Jak ma sie nazywac twoja firma: ";
-            cin>>nazwa;
+            getline(cin, nazwa);
             if(nazwa!="") exit=false;
         }
         exit=true;

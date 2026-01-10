@@ -9,17 +9,19 @@
 using namespace std;
 
 char a;
-float kasa=2000;
-bool czyZlecenie=false, czyStowrzonaFirma=true; //TESTY
-int ktoraDrukarka=1; //TESTY
-int ktoryTransport=0;
+float kasa=1500;
+string hasloBank;
+bool czyZlecenie=false, czyStowrzonaFirma=false, czyStorzoneKonto=false;
+bool maszDrukarke [3] = {0, 0, 0};
+bool maszTransport [3] = {0, 0, 0};
 
 Drukarka tabD[3] = {Drukarka("ender", 1200, 1), Drukarka("prusa", 2500, 1.5), Drukarka("prusaPro", 4000, 2)};
-Drukarka twojaDrukarka=tabD[2]; //TESTY
-Filament tabF[3] = {Filament("PLA", 80, 300), Filament("ABS", 90, 300), Filament("PET", 100, 300)}; //TESTY
+Drukarka twojaDrukarka;
+Filament tabF[3] = {Filament("PLA", 80, 0), Filament("ABS", 90, 0), Filament("PET", 100, 0)};
 Transport twojTransport;
 Transport tabT[3] = {Transport("rower",2000, 1.5), Transport("skuter",3500, 2), Transport("samochod",5000, 2.5)};
 Zlecenie twojeZlecenie;
+Danefirmy danefirmy;
 
 void podroz_druk(int x, bool c)
 {
@@ -27,7 +29,6 @@ void podroz_druk(int x, bool c)
     for (int i = 1; i <= x; i++)
     {
         system("cls"); //system("clear")
-        cout<<x<<endl;
         if(c){
             if(i<=3) cout<<"Szykowanie sie do drogi";
             else if((i>3)&&(i<x)) cout<<"Przemieszczanie sie do celu";
@@ -49,6 +50,8 @@ void podroz_druk(int x, bool c)
     }
     return;
 }
+
+//-----------------------------------------------------
 
 void kupowanie_filamentu(int a)
 {
@@ -138,7 +141,7 @@ void kupowanie_drukarki(int a)
                 else if(a==3) {twojaDrukarka=tabD[2];}
                 cout<<"Kupiono drukarke!"<<endl;
                 cout<<"Stan konta wynosi teraz: "<<kasa<<endl;
-                ktoraDrukarka++;
+                maszDrukarke[a-1]=true;
                 getchar();getchar();
                 exit=false;
             }
@@ -188,7 +191,7 @@ void kupowanie_transportu(int a)
                 else if(a==3) {twojTransport=tabT[2];}
                 cout<<"Kupiono pojazd!"<<endl;
                 cout<<"Stan konta wynosi teraz: "<<kasa<<endl;
-                ktoryTransport++;
+                maszTransport[a-1]=true;
                 getchar();getchar();
                 exit=false;
             }
@@ -206,15 +209,21 @@ void kupowanie_transportu(int a)
 
 //-----------------------------------------------------
 
-void komputer()
+void email()
 {
+    if(czyStowrzonaFirma==false){
+        system("cls"); //system("clear")
+        cout<<"Zanim wejdziesz na swojego maila, zarejestruj swoja firme"<<endl; 
+        getchar();
+        return;
+    }
     bool exit=true;
     while (exit)
     {
         system("cls"); //system("clear")
         if(czyZlecenie==false){
             cout<<"Masz nowe zlecenie!"<<endl;
-            Zlecenie noweZ(rand()%+100+100, rand()%200+100, rand()%30+30, rand()%3);
+            Zlecenie noweZ(rand()%+100+100, rand()%200+150, rand()%20+40, rand()%3);
             noweZ.pokaz();
             cout<<"1. Przyjmij zlecenie"<<endl;
             cout<<"2. Odrzuc zlecenie"<<endl;
@@ -243,25 +252,104 @@ void komputer()
     return;
 }
 
-void tworzenieStrony()
+void rejstrowanie_firmy()
+{
+    danefirmy.tworzenie();
+    czyStowrzonaFirma=true;
+    return;
+}
+
+void tworzenie_konta_bankowego()
+{
+    cout<<"Konto bankowe jest automatyczne podpiete pod twoja firme"<<endl;
+    cout<<"Bedziesz mogl teraz kupowac rzeczy na fakture, oczywiscie wtedy bedzie drozej :)"<<endl;
+    getchar();
+    
+    system("cls"); //system("clear")
+    cout<<"Login twojego konta jest automatycznie nazwa firmy (wiec mam nadzieje, ze dales jej normalna nazwe!)"<<endl;
+    cout<<"Musisz teraz tylko ustalic haslo";
+    getchar();
+    bool exit=true;
+    while (exit)
+    {
+        system("cls"); //system("clear")
+        string powtorka;
+        cout<<"Nowe haslo: "; getline(cin, hasloBank);
+        cout<<"Powtorz haslo: "; getline(cin, powtorka);
+        if(powtorka==hasloBank){
+            system("cls"); //system("clear")
+            cout<<"Stworzono konto"<<endl;
+            getchar();
+            czyStorzoneKonto=true;
+            exit=false;
+        }
+        else{
+            system("cls"); //system("clear")
+            cout<<"Nieprawidlowo wprowadzone haslo"<<endl;
+            cout<<"Sprobuj jeszcz raz"<<endl;
+            getchar();
+        }
+    }
+    return;
+}
+
+void konto_bankowe()
+{
+    system("cls"); //system("clear")
+    if(czyStowrzonaFirma==false){
+        cout<<"Zanim stworzysz konto w banku, zarejestruj swoja firme"<<endl;
+        getchar();
+    }
+    else if(czyStorzoneKonto==false){
+        tworzenie_konta_bankowego();
+    }
+    else{
+        string bufor;
+        cout<<"Login: "<<danefirmy.nazwa<<endl;
+        cout<<"Haslo: "; getline(cin, bufor);
+
+        if(bufor==hasloBank){
+            system("cls"); //system("clear")
+            cout<<"Twoj stan konta, to "<<kasa<<"$ "<<endl;
+            cout<<"(Wraz z rozwojem gry pojawia sie pozyczki, ale na razie nic niema po za tym :] )"<<endl;
+            getchar();
+        }
+        else{
+            system("cls"); //system("clear")
+            cout<<"Nieprawodlowe haslo"<<endl;
+            getchar();
+        }
+    }
+    return;
+}
+
+void komputer()
 {
     bool exit=true;
     while (exit)
     {
         system("cls"); //system("clear")
-        cout<<"Nie masz jeszcze zarejstrowaniej firmy!"<<endl;
-        cout<<"Czy chcesz ja teraz zarejstrowac?"<<endl;
-        cout<<"1. tak"<<endl;
-        cout<<"2. nie"<<endl;
+        cout<<"1. Wejdz na e-maila"<<endl;
+        cout<<"2. Wejdz na konto bankowe"<<endl;
+        cout<<"3. Wstecz"<<endl;
+        if(czyStowrzonaFirma==false) cout<<"4. Zarejstroj firme firme"<<endl;
         a=getch(); cout<<endl;
 
-        if(a=='1'){
-            Danefirmy danefirmy;
-            danefirmy.tworzenie();
-            czyStowrzonaFirma=true;
+        switch (a)
+        {
+        case '1':
+            email(); 
+        break;
+        case '2':
+            konto_bankowe();
+        break;
+        case '3':
             exit=false;
+        break;
+        case '4':
+            rejstrowanie_firmy();
+        break;
         }
-        else if(a=='2') exit=false;
     }
     return;
 }
@@ -270,32 +358,34 @@ void tworzenieStrony()
 
 void magazyn()
 {
-    bool exit=true;
-    while(exit)
+    system("cls"); //system("clear")
+    
+    cout<<"Posiadany filament | Posiadane drukarki | Posiadane pojazdy |"<<endl;
+    
+    for (int i = 0; i < 3; i++)
     {
-        system("cls"); //system("clear")
-        
-        cout<<"Posiadany filament | Posiadane drukarki | Posiadane pojazdy"<<endl; //19, 20, 17
-        
-        for (int i = 0; i < 3; i++)
-        {
-            int ile = to_string(tabF[i].ilosc).size();
-            cout<<tabF[i].nazwa<<": "<<tabF[i].ilosc<<" gramow";
-            for (int i = 0; i < abs(ile+12-19); i++) cout<<" ";
-            cout<<"| ";
+        int ile = to_string(tabF[i].ilosc).size();
+        cout<<tabF[i].nazwa<<": "<<tabF[i].ilosc<<" gramow";
+        for (int d = 0; d < abs(ile+12-19); d++) cout<<" ";
+        cout<<"| ";
 
+        if(maszDrukarke[i]==true){
             cout<<tabD[i].nazwa;
-            for (int i = 0; i < abs(static_cast<int>(tabD[i].nazwa.size())-20); i++) cout<<" ";
-            cout<<"| ";
-
-            cout<<tabT[i].nazwa;
-            for (int i = 0; i < abs(static_cast<int>(tabT[i].nazwa.size())-17); i++) cout<<" ";
-            cout<<"|";
-            cout<<endl;
+            for (int d = 0; d < abs(static_cast<int>(tabD[i].nazwa.size())-19); d++) cout<<" ";
         }
-        getchar();
-        exit=false;
+        else {for (int d = 0; d < 19; d++) cout<<" ";}
+        cout<<"| ";
+
+        if(maszTransport[i]==true)
+        {
+            cout<<tabT[i].nazwa;
+            for (int d = 0; d < abs(static_cast<int>(tabT[i].nazwa.size())-18); d++) cout<<" ";
+        }
+        else {for(int d = 0; d < 18; d++) cout<<" ";}
+        cout<<"|";
+        cout<<endl;
     }
+    getchar();
     return;
 }
 
@@ -311,6 +401,7 @@ void drukowanie()
     bool exit=true;
     while (exit)
     {
+        system("cls"); //system("clear")
         // wypisywanie danych druku
         twojeZlecenie.pokaz();
         cout<<"Posiadany filament tego typu: "<<ileF<<" gramow"<<endl;
@@ -358,8 +449,8 @@ void drukarnia()
 
         if(a=='1'){
             system("cls"); //system("clear")
-            if(czyZlecenie==false) {cout<<"Nie masz aktulalnie zadnych zlecen"<<endl; getchar();}
-            else if(ktoraDrukarka==0){cout<<"Nie masz jeszcze zadnej drukarki"<<endl; getchar();}
+            if((maszDrukarke[0]==false)&&(maszDrukarke[1]==false)&&(maszDrukarke[2]==false)){cout<<"Nie masz jeszcze zadnej drukarki"<<endl; getchar();}
+            else if(czyZlecenie==false) {cout<<"Nie masz aktulalnie zadnych zlecen"<<endl; getchar();}
             else drukowanie();
         }
         else if(a=='2') magazyn();
@@ -394,9 +485,9 @@ void s_drukarki()
     {
         system("cls"); //system("clear")
         cout<<"Jaka drukarke chcesz kupic?"<<endl;
-        if(ktoraDrukarka==0)cout<<"1. Ender"<<endl;
-        if(ktoraDrukarka<=1)cout<<"2. Prusa"<<endl;
-        if(ktoraDrukarka<=2)cout<<"3. PrusaPro"<<endl;
+        if(maszDrukarke[0]==false)cout<<"1. Ender"<<endl;
+        if(maszDrukarke[1]==false)cout<<"2. Prusa"<<endl;
+        if(maszDrukarke[2]==false)cout<<"3. PrusaPro"<<endl;
         else cout<<"Masz juz najlepsza drukarke :)"<<endl;
         cout<<"4. Wstecz"<<endl;
         a=getch(); cout<<endl;
@@ -404,25 +495,24 @@ void s_drukarki()
         switch (a)
         {
         case '1':
-            if(ktoraDrukarka==0)
+            if(maszDrukarke[0]==false)
             {
                 kupowanie_drukarki(1);
             }
         break;
         case '2':
-        if(ktoraDrukarka<=1)
+        if(maszDrukarke[1]==false)
         {
             kupowanie_drukarki(2);
         }
         break;
         case '3':
-        if(ktoraDrukarka<=2)
+        if(maszDrukarke[2]==false)
         {
             kupowanie_drukarki(3);  
         }
         break;
-        case '4':
-            podroz_druk(60, true);  
+        case '4': 
             exit=false;
         break;
         }
@@ -468,9 +558,9 @@ void s_pojazdy()
     {
         system("cls"); //system("clear")
         cout<<"Jaki srodek transportu chcesz kupic?"<<endl;
-        if(ktoryTransport==0) cout<<"1. Rower"<<endl;
-        if(ktoryTransport<=1) cout<<"2. Skuter"<<endl;
-        if(ktoryTransport<=2) cout<<"3. Samochod"<<endl;
+        if(maszTransport[0]==false) cout<<"1. Rower"<<endl;
+        if(maszTransport[1]==false) cout<<"2. Skuter"<<endl;
+        if(maszTransport[2]==false) cout<<"3. Samochod"<<endl;
         else cout<<"Masz juz najlepszy rodzaj transportu"<<endl;
         cout<<"4. Wroc do domu"<<endl;
         a=getch(); cout<<endl;
@@ -478,17 +568,17 @@ void s_pojazdy()
         switch (a)
         {
         case '1':
-            if(ktoryTransport==0){
+            if(maszTransport[0]==false){
                 kupowanie_transportu(1);
             }
         break;
         case '2':
-            if(ktoryTransport<=1){
+            if(maszTransport[1]==false){
                 kupowanie_transportu(2);
             }
         break;
         case '3':
-            if(ktoryTransport<=2){
+            if(maszTransport[2]==false){
                 kupowanie_transportu(3);
             }
         break;
@@ -579,6 +669,11 @@ void podworko()
     while(exit)
     {
         system("cls"); //system("clear")
+        if(czyStorzoneKonto==false){
+            cout<<"Sotworz na poczatku konto bankowe, aby modz cos kupic"<<endl;
+            getchar();
+            return;
+        }
         cout<<"1. Idz do sklepu z drukarkami i filamentem"<<endl;
         cout<<"2. Idz do sklepu z pojazdami"<<endl;
         cout<<"3. Idz do kiosku"<<endl;
@@ -592,7 +687,7 @@ void podworko()
             jaki_sklep();
         break;
         case '2':
-            //podroz_druk(60, true);
+            podroz_druk(60, true);
             s_pojazdy();
         break;
         case '3':
@@ -618,6 +713,7 @@ void dom()
         cout<<"1. Idz do drukarni"<<endl;
         cout<<"2. Idz do komputera"<<endl;
         cout<<"3. Wyjdz z domu"<<endl;
+        cout<<endl;
         cout<<"4. Wyjdz do menu glownego"<<endl;
         a=getch(); cout<<endl;
 
@@ -627,8 +723,7 @@ void dom()
             drukarnia();
         break;
         case '2':
-            if(czyStowrzonaFirma) komputer();
-            else tworzenieStrony();
+            komputer();
         break;
         case '3':
             podworko();
@@ -672,7 +767,7 @@ void menu_glowne()
 
 int main()
 {
-    srand(time(NULL));
+    srand(time(NULL));  
     menu_glowne();
     return 0;
 }

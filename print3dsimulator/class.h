@@ -13,6 +13,7 @@ class Drukarka
     friend void kupowanie_drukarki(int a);
     friend void drukowanie();
     friend void magazyn();
+    friend void podroz_druk(int x, bool c);
 };
 
 class Filament
@@ -64,4 +65,5 @@ class Danefirmy
     public:
     Danefirmy(string="",string="",string="",string="");
     void tworzenie();
+    friend void konto_bankowe();
 };
