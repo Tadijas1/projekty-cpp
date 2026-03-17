@@ -6,6 +6,7 @@
 using namespace std;
 
 int ileP;
+int tik = 0;
 
 class Proces
 {
@@ -13,6 +14,7 @@ class Proces
     string nazwa;
     int czasPrzyjscia;
     int czasPrzetwarzania;
+    
 
     Proces(string n="", int czPrzyj = 0, int czPrzet = 0) {
         nazwa = n;
@@ -40,6 +42,8 @@ int main()
 
     //Tworzenie tablicy
     vector<Proces> procesy;
+    vector<int> kiedyZakonczono;
+    vector<string> ktoryProces;
 
     for (int i = 0; i < ileP; i++)
     {
@@ -57,45 +61,56 @@ int main()
     {
         procesy[i].pokaz(); 
     }
+    Sleep(2000);
 
+    //PĘTLA GŁÓWNA
     while(!procesy.empty())
     {
         //Sortowanie przy pomocy czas przyjścia (BOMBELKOWE)
         for (int i = 0; i < procesy.size(); i++) {   
-            for(int i = 0; i < procesy.size()-1; i++) {
-                if(procesy[i].czasPrzyjscia > procesy[i+1].czasPrzyjscia) {
+            for(int d = 0; d < procesy.size()-1; d++) {
+                if(procesy[d].czasPrzyjscia > procesy[d+1].czasPrzyjscia) {
                     Proces bufor;
-                    bufor = procesy[i];
-                    procesy[i] = procesy[i+1];
-                    procesy[i+1] = bufor;
+                    bufor = procesy[d];
+                    procesy[d] = procesy[d+1];
+                    procesy[d+1] = bufor;
                 }
             }
         }
         
-        //Ile jest procesów z zerem
-        bool czy_zero = true;
+        //Ile jest procesów z zerowym czasem przyjścia
         int ileliczb = 0;
-        for (int i = 0; czy_zero == true; i++)
+        bool exit = true;
+        
+        for (int i = 0; (i < procesy.size()) && (exit); i++)
         {
             if(procesy[i].czasPrzyjscia == 0) ileliczb++;
-            else czy_zero = false;
+            else exit = false;
         }
+        
 
         //Sortowanie przy pomocy czas przetwarzania (BOMBELKOWE)
-        for (int d = 0; d < ileliczb; d++) {   
-            for(int i = 0; i < ileliczb-1; i++) {
-                if(procesy[i].czasPrzetwarzania > procesy[i+1].czasPrzetwarzania) {
+        for (int i = 0; i < ileliczb; i++) {   
+            for(int d = 0; d < ileliczb-1; d++) {
+                if(procesy[d].czasPrzetwarzania > procesy[d+1].czasPrzetwarzania) {
                     Proces bufor;
-                    bufor = procesy[i];
-                    procesy[i] = procesy[i+1];
-                    procesy[i+1] = bufor;
+                    bufor = procesy[d];
+                    procesy[d] = procesy[d+1];
+                    procesy[d+1] = bufor;
                 }
             }
         }
 
-        //JEDEN TIK
-        procesy[0].czasPrzetwarzania--;
-        if(procesy[0].czasPrzetwarzania == 0) procesy.erase(procesy.begin());
+        //ZWIĘKSZANIE TIKU O 1
+        tik++;
+
+        //ZAKOŃCZENIE PROCESU
+        if(procesy[0].czasPrzyjscia == 0) procesy[0].czasPrzetwarzania--;
+        if(procesy[0].czasPrzetwarzania == 0){
+            kiedyZakonczono.push_back(tik);
+            ktoryProces.push_back(procesy[0].nazwa);
+            procesy.erase(procesy.begin());
+        }
 
         //Zmniejszanie czasuPrzyjścia u każdego procesu
         for (int i = 0; i < procesy.size(); i++) if(procesy[i].czasPrzyjscia > 0) procesy[i].czasPrzyjscia--;
@@ -104,11 +119,18 @@ int main()
         system("cls"); //system("clear");
         for (int i = 0; i < procesy.size(); i++)
         {
-            procesy[i].pokaz(); 
+            procesy[i].pokaz();
         }
-
-        Sleep(1000);
+        Sleep(750);
     }
+
+    for (int i = 0; i < kiedyZakonczono.size(); i++)
+    {
+        cout<<ktoryProces[i]<<": "<<kiedyZakonczono[i]<<endl;
+    }
+
+    getchar();getchar();
+    
 
     return 0;
 }
