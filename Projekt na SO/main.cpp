@@ -11,19 +11,21 @@ int tik = 0;
 class Proces
 {
     public:
-    string nazwa;
+    int numer;
     int czasPrzyjscia;
     int czasPrzetwarzania;
+    int kiedyZakonczono;
     
 
-    Proces(string n="", int czPrzyj = 0, int czPrzet = 0) {
-        nazwa = n;
+    Proces(int id = 0, int czPrzyj = 0, int czPrzet = 0, int kz = 0) {
+        numer = id;
         czasPrzyjscia = czPrzyj;
         czasPrzetwarzania = czPrzet;
+        kiedyZakonczono = kz;
     }
 
     void pokaz() {
-        cout<<nazwa<<": ";
+        cout<<"P"<<numer<<": ";
         cout<<czasPrzyjscia<<" ";
         cout<<czasPrzetwarzania<<endl;
         return;
@@ -42,8 +44,6 @@ int main()
 
     //Tworzenie tablicy
     vector<Proces> procesy;
-    vector<int> kiedyZakonczono;
-    vector<string> ktoryProces;
 
     for (int i = 0; i < ileP; i++)
     {
@@ -52,16 +52,19 @@ int main()
         int x, y;
         cout<<"Czas Przyjscia "<<i+1<<" procesu: "; cin>>x;
         cout<<"Czas Przetwarzania "<<i+1<<" procesu: "; cin>>y;
-        procesy.push_back(Proces(string("P") + to_string(i+1), x, y));
+        procesy.push_back(Proces(i+1, x, y));
     }
 
+    //Wykonywanie kopii do końcowych obliczeń
+    vector<Proces> procesyKopia = procesy;
+
     //Pokazanie tablicy na początek
-    system("cls"); //system("clear");
+    system("cls"); //system("clear");  
     for (int i = 0; i < procesy.size(); i++)
     {
         procesy[i].pokaz(); 
     }
-    Sleep(2000);
+    Sleep(1000);
 
     //PĘTLA GŁÓWNA
     while(!procesy.empty())
@@ -107,8 +110,8 @@ int main()
         //ZAKOŃCZENIE PROCESU
         if(procesy[0].czasPrzyjscia == 0) procesy[0].czasPrzetwarzania--;
         if(procesy[0].czasPrzetwarzania == 0){
-            kiedyZakonczono.push_back(tik);
-            ktoryProces.push_back(procesy[0].nazwa);
+            int i = procesy[0].numer;
+            procesyKopia[i-1].kiedyZakonczono = tik;
             procesy.erase(procesy.begin());
         }
 
@@ -124,12 +127,42 @@ int main()
         Sleep(750);
     }
 
-    for (int i = 0; i < kiedyZakonczono.size(); i++)
-    {
-        cout<<ktoryProces[i]<<": "<<kiedyZakonczono[i]<<endl;
+    //Sortowanie procesówKopii przy pomocy czas przetwarzania (BOMBELKOWE)
+    for (int i = 0; i < procesyKopia.size(); i++) {   
+        for(int d = 0; d < procesyKopia.size()-1; d++) {
+            if(procesyKopia[d].czasPrzetwarzania > procesyKopia[d+1].czasPrzetwarzania) {
+                Proces bufor;
+                bufor = procesyKopia[d];
+                procesyKopia[d] = procesyKopia[d+1];
+                procesyKopia[d+1] = bufor;
+            }
+        }
     }
 
+    //Po ilu tikach procesy zostały zakończone
+    cout<<"Procesy zostaly zakonczone po tylu tikach: "<<endl;
+    for (int i = 0; i < procesyKopia.size(); i++)
+    {
+        cout<<"P"<<procesyKopia[i].numer<<": "<<procesyKopia[i].kiedyZakonczono<<endl;
+    }
+    cout<<endl<<"Nacisnij enter";
     getchar();getchar();
+    
+    //Czas oczeniwania procesów
+
+    float SCzO = 0;
+
+    for (int i = 0; i < procesyKopia.size(); i++)
+    {
+        SCzO += procesyKopia[i].kiedyZakonczono - procesyKopia[i].czasPrzyjscia - procesyKopia[i].czasPrzetwarzania;
+    }
+
+    //Średni czas oczekiwania
+    SCzO /= procesyKopia.size();
+
+    system("cls"); //system("clear");
+    cout<<"Sredni czas oczekiwania: "<<SCzO<<" tikow";
+    getchar();
     
 
     return 0;
