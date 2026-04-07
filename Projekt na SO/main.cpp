@@ -134,10 +134,10 @@ int planowanie(bool wybor)
         Sleep(750);
     }
 
-    //Sortowanie procesówKopii przy pomocy czas przetwarzania (BOMBELKOWE)
+    //Sortowanie procesówKopii przy pomocy czasu skończenia procesu (BOMBELKOWE)
     for (int i = 0; i < procesyKopia.size(); i++) {   
         for(int d = 0; d < procesyKopia.size()-1; d++) {
-            if(procesyKopia[d].czasPrzetwarzania > procesyKopia[d+1].czasPrzetwarzania) {
+            if(procesyKopia[d].kiedyZakonczono > procesyKopia[d+1].kiedyZakonczono) {
                 Proces bufor;
                 bufor = procesyKopia[d];
                 procesyKopia[d] = procesyKopia[d+1];
