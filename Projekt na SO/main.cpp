@@ -34,41 +34,48 @@ class Proces
     }
 };
 
-int planowanie(bool wybor)
+int rotacyjne(vector<Proces> procesy, vector<Proces> &procesyKopia)
 {
-    system("cls"); //system("clear");
-
-    //Logo
-    if(wybor) cout<<"! PLANOWANIE METODA SJF !"<<endl;
-    else cout<<"! PLANOWANIE METODA PRIOTYTETU !"<<endl;
-
-    //Pierwsze pytanie
-    cout<<"Ile chcesz miec procesow: "; cin>>ileP;
-
-    //Tworzenie tablicy
-    vector<Proces> procesy;
-
-    for (int i = 0; i < ileP; i++)
+    int licznik = 0;
+    Proces bufor;
+    while (!procesy.empty())
     {
-        //Pytania o dane
+        //przeprowadzanie procesu lub wywłaszczanie go
+        if(licznik != 5) {
+            procesy[0].czasPrzetwarzania--;
+            licznik++;
+        } else {
+            bufor = procesy[0];
+            procesy.erase(procesy.begin());
+            procesy.push_back(bufor);
+
+            procesy[0].czasPrzetwarzania--;
+            licznik = 1;
+        }
+
+        //ZWIĘKSZANIE TIKU O 1
+        tik++;
+
+        //ZAKOŃCZENIE PROCESU
+        if(procesy[0].czasPrzetwarzania == 0){
+            int i = procesy[0].numer;
+            procesyKopia[i-1].kiedyZakonczono = tik;
+            procesy.erase(procesy.begin());
+        }
+        
+        //pokazywanie co się zmieniło
         system("cls"); //system("clear");
-        int x, y;
-        if(wybor) {cout<<"Czas Przyjscia "<<i+1<<" procesu: "; cin>>x;}
-        if(!wybor) {cout<<"Priorytet "<<i+1<<" procesu: "; cin>>x;}
-        cout<<"Czas Przetwarzania "<<i+1<<" procesu: "; cin>>y;
-        procesy.push_back(Proces(i+1, x, y));
-    }
+        for (int i = 0; i < procesy.size(); i++)
+        {
+            procesy[i].pokaz();
+        }
 
-    //Wykonywanie kopii do końcowych obliczeń
-    vector<Proces> procesyKopia = procesy;
+        Sleep(1000);
+    }   
+}
 
-    //Pokazanie tablicy na początek
-    system("cls"); //system("clear");  
-    for (int i = 0; i < procesy.size(); i++)
-    {
-        procesy[i].pokaz(); 
-    }
-    Sleep(1000);
+int planowanie(vector<Proces> procesy, vector<Proces> &procesyKopia, bool wybor)
+{
 
     //PĘTLA GŁÓWNA
     while(!procesy.empty())
@@ -134,6 +141,56 @@ int planowanie(bool wybor)
         Sleep(750);
     }
 
+    return 0;
+}
+
+int pytania_i_wynik(int wybor)
+{
+    //PYTANIA O DANE
+    system("cls"); //system("clear");
+
+   //Logo
+    if(wybor) cout<<"! PLANOWANIE METODA SJF !"<<endl;
+    else cout<<"! PLANOWANIE METODA PRIOTYTETU !"<<endl;
+
+    //Pierwsze pytanie
+    cout<<"Ile chcesz miec procesow: "; cin>>ileP;
+
+    //Tworzenie tablicy
+    vector<Proces> procesy;
+
+    for (int i = 0; i < ileP; i++)
+    {
+        //Pytania o dane
+        system("cls"); //system("clear");
+        int x, y;
+        if(wybor == 1) {cout<<"Czas Przyjscia "<<i+1<<" procesu: "; cin>>x;}
+        else if(wybor == 0) {cout<<"Priorytet "<<i+1<<" procesu: "; cin>>x;}
+        else if(wybor == 2) x=0;
+        cout<<"Czas Przetwarzania "<<i+1<<" procesu: "; cin>>y;
+        procesy.push_back(Proces(i+1, x, y));
+    }
+
+    //Tworzenie kopii przypomocy której będziemy prowadzić na koniec obliczenia
+    vector<Proces> procesyKopia = procesy;
+
+    //Pokazanie tablicy na początek
+    system("cls"); //system("clear");  
+    for (int i = 0; i < procesy.size(); i++)
+    {
+        procesy[i].pokaz(); 
+    }
+    Sleep(1000);
+
+    //--------------------------------------------------------------------------------------
+
+    //Przydszelenie odpowaedniego planowania
+    if(wybor == 1 || wybor == 0) planowanie(procesy, procesyKopia, wybor);
+    else rotacyjne(procesy, procesyKopia);
+
+    //--------------------------------------------------------------------------------------
+
+    //OBLICZANIE I PREZENTOWANIE WYNIKU
     //Sortowanie procesówKopii przy pomocy czasu skończenia procesu (BOMBELKOWE)
     for (int i = 0; i < procesyKopia.size(); i++) {   
         for(int d = 0; d < procesyKopia.size()-1; d++) {
@@ -156,7 +213,6 @@ int planowanie(bool wybor)
     getchar();getchar();
     
     //Czas oczeniwania procesów
-
     float SCzO = 0;
 
     for (int i = 0; i < procesyKopia.size(); i++)
@@ -171,24 +227,23 @@ int planowanie(bool wybor)
     system("cls"); //system("clear");
     cout<<"Sredni czas oczekiwania: "<<SCzO<<" tikow";
     getchar();
-    
-
-    return 0;
 }
-
 
 int main()
 {
-    bool wybor;
+    int wybor;
 
     system("cls"); //system("clear");
     cout<<"!Wyierz metode planowania!"<<endl;
     cout<<"1. SJF"<<endl;
-    cout<<"2. Priorytetu"<<endl;
+    cout<<"2. Priorytetu"<<endl;    
+    cout<<"3. Rotacyjne"<<endl;
     a = getch(); cout<<endl;
-    if(a=='1') wybor = true;
-    else wybor = false;
-    planowanie(wybor);
+
+    if(a == '1') wybor = true;
+    else if(a == '2') wybor = false;
+    else if(a == '3') wybor = 2;
+    pytania_i_wynik(wybor);
 
     return 0;
 }
